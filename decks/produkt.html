@@ -144,10 +144,11 @@
 <section class="slide">
   <div class="logo">uds<span>Бизнес</span></div>
   <div class="head"><div class="eyebrow">Интерфейс</div><div class="h2">Приложение <em>глазами клиента</em></div></div>
-  <div style="position:absolute; left:4.4cqw; right:4.4cqw; top:15cqw; bottom:4cqw; display:flex; gap:2.6cqw; justify-content:center; z-index:2">
-    <div class="glass a" style="--i:0; padding:.8cqw"><img src="../assets/img/produkt/app-home.jpg" alt="Главный экран uds App" style="height:100%; border-radius:.9cqw; display:block"></div>
-    <div class="glass a" style="--i:1; padding:.8cqw"><img src="../assets/img/produkt/app-company.jpg" alt="Карточка компании в uds App" style="height:100%; border-radius:.9cqw; display:block"></div>
-    <div class="glass a" style="--i:2; padding:.8cqw"><img src="../assets/img/produkt/app-referral.jpg" alt="Бонусы за рекомендации в uds App" style="height:100%; border-radius:.9cqw; display:block"></div>
+  <!-- высоты картинок заданы явно в cqw: height:100% в цепочке flex→img разъезжается в Safari (iPad) -->
+  <div style="position:absolute; left:4.4cqw; right:4.4cqw; top:15cqw; bottom:4cqw; display:flex; gap:2.6cqw; justify-content:center; align-items:center; z-index:2">
+    <div class="glass a" style="--i:0; padding:.8cqw"><img src="../assets/img/produkt/app-home.jpg" alt="Главный экран uds App" style="height:35.5cqw; width:auto; border-radius:.9cqw; display:block"></div>
+    <div class="glass a" style="--i:1; padding:.8cqw"><img src="../assets/img/produkt/app-company.jpg" alt="Карточка компании в uds App" style="height:35.5cqw; width:auto; border-radius:.9cqw; display:block"></div>
+    <div class="glass a" style="--i:2; padding:.8cqw"><img src="../assets/img/produkt/app-referral.jpg" alt="Бонусы за рекомендации в uds App" style="height:35.5cqw; width:auto; border-radius:.9cqw; display:block"></div>
   </div>
 </section>
 
