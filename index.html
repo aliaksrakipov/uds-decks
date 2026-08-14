@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UDS — презентации для партнёров</title>
+<style>
+@font-face{font-family:'Unbounded';font-weight:800;font-style:normal;font-display:swap;src:url(assets/fonts/unbounded-800.woff2) format('woff2');}
+@font-face{font-family:'Inter';font-weight:100 900;font-style:normal;font-display:swap;src:url(assets/fonts/inter-var.woff2) format('woff2');}
+*{box-sizing:border-box;margin:0}
+body{
+  --bg:#0E0E15; --panel:rgba(255,255,255,.045); --line:rgba(255,255,255,.13);
+  --ink:#EDEEF4; --mut:#a9aec2; --mut2:#8b90a5;
+  --acc:#A78BFA; --acc2:#7C3AED; --acc-dim:rgba(124,58,237,.20);
+  background:
+    radial-gradient(90% 60% at 85% -10%, #251F3E 0%, transparent 55%),
+    radial-gradient(70% 50% at 5% 110%, #1B1730 0%, transparent 60%),
+    var(--bg);
+  background-attachment:fixed;
+  color:var(--ink); font-family:"Inter",-apple-system,sans-serif;
+  min-height:100vh; padding:48px 24px 80px;
+}
+.wrap{max-width:1060px;margin:0 auto}
+.logo{font-family:"Unbounded",sans-serif;font-weight:800;font-size:22px}
+.logo span{color:var(--mut2);font-weight:400;font-family:"Inter",sans-serif;margin-left:10px;font-size:17px}
+h1{font-family:"Unbounded",sans-serif;font-weight:800;font-size:clamp(26px,4.5vw,44px);line-height:1.15;margin-top:40px}
+h1 em{font-style:normal;color:var(--acc)}
+.sub{color:var(--mut);font-size:17px;margin-top:14px;max-width:620px;line-height:1.5}
+.step{margin-top:48px}
+.step-lbl{display:inline-flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--acc);font-weight:600}
+.step-lbl::before{content:"";width:26px;height:1px;background:var(--acc)}
+.partners{display:flex;flex-wrap:wrap;gap:14px;margin-top:20px}
+.p-card{display:flex;align-items:center;gap:12px;padding:10px 22px 10px 10px;border-radius:99px;
+  background:var(--panel);border:1px solid var(--line);cursor:pointer;transition:.25s;
+  color:var(--ink);font:600 15px/1.3 "Inter",sans-serif;text-align:left}
+.p-card img{width:44px;height:44px;border-radius:50%;object-fit:cover;object-position:50% 20%}
+.p-card .no-photo{width:44px;height:44px;border-radius:50%;background:var(--acc-dim);display:grid;place-items:center;color:var(--mut2);font-weight:800}
+.p-card:hover{border-color:rgba(167,139,250,.5)}
+.p-card.sel{background:linear-gradient(160deg,var(--acc-dim),var(--panel));border-color:rgba(167,139,250,.65);box-shadow:0 0 24px rgba(124,58,237,.25)}
+.themes{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:20px}
+.t-card{position:relative;display:flex;flex-direction:column;gap:10px;padding:26px 24px 20px;border-radius:18px;
+  background:var(--panel);border:1px solid var(--line);transition:.25s}
+.t-card:hover{border-color:rgba(167,139,250,.5);transform:translateY(-2px)}
+.t-num{font-family:"Unbounded",sans-serif;font-weight:800;font-size:13px;color:var(--mut2)}
+.t-name{font-family:"Unbounded",sans-serif;font-weight:800;font-size:19px;line-height:1.25}
+.t-desc{color:var(--mut);font-size:14.5px;line-height:1.5;flex:1}
+.t-note{color:var(--mut2);font-size:13px}
+.t-note b{color:var(--acc);font-weight:600}
+.t-actions{display:flex;gap:10px;margin-top:10px}
+.btn{display:inline-block;padding:11px 22px;border-radius:99px;font:600 14px/1 "Inter",sans-serif;cursor:pointer;
+  text-decoration:none;text-align:center;transition:.2s;border:1px solid transparent}
+.btn.go{background:linear-gradient(120deg,var(--acc2),var(--acc));color:#fff;flex:1}
+.btn.go:hover{filter:brightness(1.12)}
+.btn.copy{background:transparent;border-color:var(--line);color:var(--mut)}
+.btn.copy:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
+.foot{margin-top:64px;color:var(--mut2);font-size:13px;border-top:1px solid var(--line);padding-top:18px}
+</style>
+</head><body>
+<div class="wrap">
+  <div class="logo">uds<span>Partner · презентации</span></div>
+  <h1>Выбери себя и тему —<br>презентация соберётся <em>сама</em></h1>
+  <p class="sub">Каждая презентация открывается прямо в браузере: слайд с твоей визиткой подставится автоматически. Ссылку можно отправить клиенту — у него откроется твоя версия.</p>
+
+  <div class="step">
+    <div class="step-lbl">Шаг 1 · Кто выступает</div>
+    <div class="partners" id="partners"></div>
+    <a href="add.html" style="display:inline-block; margin-top:14px; color:var(--mut2); font-size:13.5px; text-decoration:none">+ Добавить нового спикера</a>
+  </div>
+
+  <div class="step">
+    <div class="step-lbl">Шаг 2 · Тема встречи</div>
+    <div class="themes" id="themes"></div>
+  </div>
+
+  <div class="foot">Управление в презентации: → ← или клик по краям · F — во весь экран · T — светлая/тёмная тема · номер слайда + Enter — прыжок.</div>
+</div>
+
+<script src="config.js"></script>
+<script src="partners.js"></script>
+<script src="engine/partners-remote.js"></script>
+<script>
+var THEMES = [
+  { id:"produkt", file:"decks/produkt.html", num:"01",
+    name:"Продукт UDS",
+    desc:"Система лояльности и CRM для розничного бизнеса: как работает, кому подходит, кейсы SAVVALI и Nicecar, тарифы." },
+  { id:"marketing", file:"decks/marketing.html", num:"02",
+    name:"Системный маркетинг",
+    desc:"Выступление: хаотичный vs системный маркетинг, зачем CRM, формула прогнозируемого дохода — и продукт UDS как решение." },
+  { id:"pervichka", file:"decks/pervichka.html", num:"03",
+    name:"Первая встреча",
+    desc:"Сценарий первички: продукт коротко, маркетинг-план партнёра — какие деньги и как зарабатывать, итог встречи." },
+  { id:"biznes", file:"decks/biznes.html", num:"04",
+    name:"Бизнес на продукте UDS",
+    desc:"Партнёрская модель дохода на IT-продукте: рынок, роли, сценарии заработка, план первых шагов." }
+];
+
+var sel = new URLSearchParams(location.search).get('p') || null;
+
+function initials(name){ return name.split(' ').map(function(w){return w[0]||'';}).join(''); }
+
+function render(){
+  var pDiv = document.getElementById('partners');
+  pDiv.innerHTML = '';
+  var none = document.createElement('button');
+  none.className = 'p-card' + (sel===null ? ' sel' : '');
+  none.innerHTML = '<span class="no-photo">—</span>Без спикера';
+  none.onclick = function(){ sel = null; sync(); };
+  pDiv.appendChild(none);
+  PARTNERS.forEach(function(p){
+    var b = document.createElement('button');
+    b.className = 'p-card' + (sel===p.id ? ' sel' : '');
+    b.innerHTML = (p.photo
+      ? '<img src="' + p.photo + '" alt="">'
+      : '<span class="no-photo">' + initials(p.name) + '</span>') + p.name;
+    b.onclick = function(){ sel = p.id; sync(); };
+    pDiv.appendChild(b);
+  });
+
+  var tDiv = document.getElementById('themes');
+  tDiv.innerHTML = '';
+  THEMES.forEach(function(t){
+    var url = t.file + (sel && !t.fixed ? '?p=' + sel : '');
+    var card = document.createElement('div');
+    card.className = 't-card';
+    card.innerHTML =
+      '<div class="t-num">' + t.num + '</div>' +
+      '<div class="t-name">' + t.name + '</div>' +
+      '<div class="t-desc">' + t.desc + '</div>' +
+      (t.fixed
+        ? '<div class="t-note">Спикер фиксированный: <b>' + t.fixed + '</b></div>'
+        : '<div class="t-note">' + (sel ? 'Откроется с визиткой: <b>' + nameOf(sel) + '</b>' : 'Спикер не выбран — откроется без визитки') + '</div>') +
+      '<div class="t-actions">' +
+        '<a class="btn go" href="' + url + '">Открыть</a>' +
+        '<button class="btn copy" data-url="' + url + '">Ссылка</button>' +
+      '</div>';
+    tDiv.appendChild(card);
+  });
+  tDiv.querySelectorAll('.btn.copy').forEach(function(b){
+    b.onclick = function(){
+      var abs = new URL(b.dataset.url, location.href).href;
+      navigator.clipboard.writeText(abs).then(function(){
+        b.textContent = '✓ Скопировано';
+        setTimeout(function(){ b.textContent = 'Ссылка'; }, 1600);
+      });
+    };
+  });
+}
+function nameOf(id){
+  var p = PARTNERS.filter(function(x){return x.id===id;})[0];
+  return p ? p.name : id;
+}
+function sync(){
+  history.replaceState(null,'', sel ? '?p=' + sel : location.pathname);
+  render();
+}
+// партнёры могут догружаться из базы — рендерим после готовности списка
+(window.PARTNERS_READY || Promise.resolve()).then(render);
+</script>
+</body></html>
