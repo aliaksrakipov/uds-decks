@@ -26,9 +26,10 @@
     var slot = document.querySelector('[data-partner-slide]');
     if (slot) {
       if (P) {
-        // регалии появляются поочерёдно (пошаговые фрагменты движка)
+        // регалии появляются поочерёдно (пошаговые фрагменты движка).
+        // ВАЖНО: без класса .a — правило .slide.cur .a специфичнее .frag и ломает скрытие шагов
         var facts = (P.facts || []).map(function(f, i){
-          return '<li class="a frag" data-step="' + (i + 1) + '" style="--i:' + (i + 3) + '">' + f + '</li>';
+          return '<li class="frag" data-step="' + (i + 1) + '">' + f + '</li>';
         }).join('');
         var photo = P.photo
           ? '<img src="' + photoSrc(P.photo) + '" alt="' + P.name + '">'
