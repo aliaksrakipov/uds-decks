@@ -39,13 +39,17 @@
 <section class="slide">
   <div class="logo">uds<span>Бизнес</span></div>
   <div class="head"><div class="eyebrow">Кому подходит</div><div class="h2">Подойдёт ли <em>моей компании</em> UDS Бизнес?</div></div>
-  <div class="cards c3">
-    <div class="card glass a" style="--i:0"><img src="../assets/img/produkt/cat-beauty.png" alt="" style="width:3.4cqw"><div class="k">Бьюти</div><div class="v">Салоны красоты, SPA</div></div>
-    <div class="card glass a" style="--i:1"><img src="../assets/img/produkt/cat-shop.png" alt="" style="width:3.4cqw"><div class="k">Магазины</div><div class="v">Розничные магазины</div></div>
-    <div class="card glass a" style="--i:2"><img src="../assets/img/produkt/cat-horeca.png" alt="" style="width:3.4cqw"><div class="k">HoReCa</div><div class="v">Отели, рестораны, кафе</div></div>
-    <div class="card glass a" style="--i:3"><img src="../assets/img/produkt/cat-auto.png" alt="" style="width:3.4cqw"><div class="k">Авто</div><div class="v">Автосервисы, заправочные станции</div></div>
-    <div class="card glass a" style="--i:4"><img src="../assets/img/produkt/cat-med.png" alt="" style="width:3.4cqw"><div class="k">Медицина</div><div class="v">Медицинские и спортивные центры</div></div>
-    <div class="card glass hi a" style="--i:5"><div class="k viol">Идеально для B2C</div><div class="v">UDS подходит розничным компаниям, которые работают с конечным потребителем</div></div>
+  <!-- ниши открываются по клику одна за другой; полоска B2C видна с самого начала -->
+  <div class="cards c3" style="bottom:14cqw">
+    <div class="card glass frag" data-step="1"><img src="../assets/img/produkt/cat-beauty.png" alt="" style="width:3.4cqw"><div class="k">Бьюти</div><div class="v">Салоны красоты, SPA</div></div>
+    <div class="card glass frag" data-step="2"><img src="../assets/img/produkt/cat-shop.png" alt="" style="width:3.4cqw"><div class="k">Магазины</div><div class="v">Розничные магазины</div></div>
+    <div class="card glass frag" data-step="3"><img src="../assets/img/produkt/cat-horeca.png" alt="" style="width:3.4cqw"><div class="k">HoReCa</div><div class="v">Отели, рестораны, кафе</div></div>
+    <div class="card glass frag" data-step="4"><img src="../assets/img/produkt/cat-auto.png" alt="" style="width:3.4cqw"><div class="k">Авто</div><div class="v">Автосервисы, заправочные станции</div></div>
+    <div class="card glass frag" data-step="5"><img src="../assets/img/produkt/cat-med.png" alt="" style="width:3.4cqw"><div class="k">Медицина</div><div class="v">Медицинские и спортивные центры</div></div>
+  </div>
+  <div class="card glass hi a" style="--i:1; position:absolute; left:4.4cqw; right:4.4cqw; bottom:5cqw; flex-direction:row; align-items:center; gap:2.6cqw; padding:1.9cqw 2.6cqw; z-index:2">
+    <div class="k viol" style="white-space:nowrap">Идеально для B2C</div>
+    <div class="v" style="flex:1">UDS подходит розничным компаниям, которые работают с конечным потребителем</div>
   </div>
 </section>
 
@@ -88,22 +92,36 @@
   <div class="st-center">
     <div>
       <h1 class="st-h1 a" style="--i:0">Любой вариант <em>программы лояльности</em><small>или все одновременно</small></h1>
-      <div class="uds-feats">
-        <div class="feat glass a" style="--i:1">
+      <div class="uds-feats" style="display:grid; grid-template-columns:repeat(3, 17cqw); justify-content:center; margin-top:2.6cqw">
+        <div class="feat glass a" style="--i:1; padding:1.7cqw 1.5cqw">
           <svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><line x1="10.5" y1="18.5" x2="13.5" y2="18.5"/></svg>
           <div class="fl">Мобильное приложение</div>
+          <div style="font-size:1.15cqw; color:var(--mut)">uds App для клиентов</div>
         </div>
-        <div class="feat glass a" style="--i:2">
+        <div class="feat glass a" style="--i:2; padding:1.7cqw 1.5cqw">
           <svg viewBox="0 0 24 24"><path d="M21 3.5 3.5 10.4l6.7 2.7 2.8 7.4L21 3.5Z"/><line x1="10.2" y1="13.1" x2="15.6" y2="7.9"/></svg>
-          <div class="fl">Telegram и MAX —<br><span style="white-space:nowrap">боты и миниприложения</span></div>
+          <div class="fl">Telegram</div>
+          <div style="font-size:1.15cqw; color:var(--mut)">Бот и миниприложение</div>
         </div>
-        <div class="feat glass a" style="--i:3">
-          <svg viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="13" rx="2"/><path d="M3.5 10h17"/><line x1="6.5" y1="15.5" x2="10.5" y2="15.5"/></svg>
+        <div class="feat glass a" style="--i:3; padding:1.7cqw 1.5cqw">
+          <svg viewBox="0 0 24 24"><path d="M4.5 4.5h15a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9.5l-4.5 4v-4h-.5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2Z"/><circle cx="8.5" cy="10.5" r=".4"/><circle cx="12" cy="10.5" r=".4"/><circle cx="15.5" cy="10.5" r=".4"/></svg>
+          <div class="fl">MAX</div>
+          <div style="font-size:1.15cqw; color:var(--mut)">Бот и миниприложение</div>
+        </div>
+        <div class="feat glass a" style="--i:4; padding:1.7cqw 1.5cqw">
+          <svg viewBox="0 0 24 24"><path d="M4.5 4.5h15a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9.5l-4.5 4v-4h-.5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2Z"/><polyline points="8.5 10.8 11 13.2 15.5 8.6"/></svg>
+          <div class="fl">VK</div>
+          <div style="font-size:1.15cqw; color:var(--mut)">Бот и миниприложение</div>
+        </div>
+        <div class="feat glass a" style="--i:5; padding:1.7cqw 1.5cqw">
+          <svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><line x1="2.5" y1="9.5" x2="21.5" y2="9.5"/><line x1="6" y1="14.5" x2="10" y2="14.5"/></svg>
           <div class="fl">Карты Apple Wallet и Google Pay</div>
+          <div style="font-size:1.15cqw; color:var(--mut)">Карта в кошельке смартфона</div>
         </div>
-        <div class="feat glass a" style="--i:4">
+        <div class="feat glass a" style="--i:6; padding:1.7cqw 1.5cqw">
           <svg viewBox="0 0 24 24"><circle cx="8" cy="8" r=".4"/><circle cx="12" cy="8" r=".4"/><circle cx="16" cy="8" r=".4"/><circle cx="8" cy="12" r=".4"/><circle cx="12" cy="12" r=".4"/><circle cx="16" cy="12" r=".4"/><circle cx="8" cy="16" r=".4"/><circle cx="12" cy="16" r=".4"/><circle cx="16" cy="16" r=".4"/><rect x="4" y="3.5" width="16" height="17" rx="2.5"/></svg>
           <div class="fl">По номеру телефона</div>
+          <div style="font-size:1.15cqw; color:var(--mut)">Без установки <span style="white-space:nowrap">чего-либо</span></div>
         </div>
       </div>
     </div>
@@ -116,8 +134,8 @@
   <div class="head"><div class="eyebrow">Попробуйте сами</div><div class="h2">Отсканируйте <em>QR-код</em></div></div>
   <div class="cards c2">
     <div class="card glass a" style="--i:0; align-items:center; text-align:center">
-      <img src="../assets/img/produkt/qr-brewery.png" alt="QR ресторана «Староместный пивовар»" style="width:17cqw; border-radius:1cqw; background:#fff; padding:.7cqw">
-      <div class="k">Ресторан «Староместный пивовар»</div>
+      <img src="../assets/img/produkt/qr-brewery.png" alt="QR ресторана «Местный пивовар»" style="width:17cqw; border-radius:1cqw; background:#fff; padding:.7cqw">
+      <div class="k">Ресторан «Местный пивовар»</div>
     </div>
     <div class="card glass a" style="--i:1; align-items:center; text-align:center">
       <img src="../assets/img/produkt/qr-ecotour.jpg" alt="QR туроператора «Экотур-6»" style="width:17cqw; border-radius:1cqw">

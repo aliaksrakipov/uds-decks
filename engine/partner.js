@@ -26,8 +26,9 @@
     var slot = document.querySelector('[data-partner-slide]');
     if (slot) {
       if (P) {
+        // регалии появляются поочерёдно (пошаговые фрагменты движка)
         var facts = (P.facts || []).map(function(f, i){
-          return '<li class="a" style="--i:' + (i + 3) + '">' + f + '</li>';
+          return '<li class="a frag" data-step="' + (i + 1) + '" style="--i:' + (i + 3) + '">' + f + '</li>';
         }).join('');
         var photo = P.photo
           ? '<img src="' + photoSrc(P.photo) + '" alt="' + P.name + '">'
