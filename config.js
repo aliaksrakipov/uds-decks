@@ -1,10 +1,6 @@
 // ===== Конфиг сайта =====
 // Ключи Supabase (оба ПУБЛИЧНЫЕ по дизайну, секретов здесь нет).
-// Пока пустые — сайт работает только на статическом реестре partners.js.
-// После создания проекта Supabase вписать:
-//   supabaseUrl:     https://<project-ref>.supabase.co
-//   supabaseAnonKey: ключ "anon public" из Settings → API
 window.SITE_CONFIG = {
-  supabaseUrl: "",
-  supabaseAnonKey: ""
+  supabaseUrl: "https://nyuledsxlamxngpvfvvd.supabase.co",
+  supabaseAnonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55dWxlZHN4bGFteG5ncHZmdnZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5MDgwODYsImV4cCI6MjEwMzQ4NDA4Nn0.tEpNBFfpKn5UJbt69M1V52RzfM6Jzu9n5WE0HxlyuJU"
 };
