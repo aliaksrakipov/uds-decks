@@ -287,14 +287,17 @@
     .spark, .st-glow, .flow-arr line{ animation:none!important; }
   }
 
-  /* печать: все слайды подряд */
+  /* печать и экспорт в PDF (Cmd + P): все слайды подряд в 16:9 */
+  @page { size: landscape; margin: 0; }
   @media print{
-    body{ overflow:visible; background:#fff; }
-    .stage{ position:static; display:block; }
-    .deck{ width:100%; height:auto; }
-    .slide{ position:relative; inset:auto; opacity:1; visibility:visible; aspect-ratio:16/9; page-break-after:always; margin:0; }
-    .a, .bar i, .frag, .tm-grid20 svg, .tm-dots{ opacity:1!important; transform:none!important; }
+    html, body{ overflow:visible!important; height:auto!important; background:#0E0E15!important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .stage{ position:static!important; display:block!important; inset:auto!important; }
+    .deck{ width:100vw!important; height:auto!important; container-type:inline-size!important; }
+    .slide{ position:relative!important; inset:auto!important; width:100vw!important; height:56.25vw!important; aspect-ratio:16/9!important;
+      opacity:1!important; visibility:visible!important; break-after:page!important; page-break-after:always!important; margin:0!important; overflow:hidden!important; }
+    .a, .bar i, .frag, .tm-grid20 svg, .tm-dots{ opacity:1!important; transform:none!important; transition:none!important; }
     .tm-dots{ opacity:.55!important; }
+    [data-spot].dim{ opacity:1!important; transform:none!important; }
     .frag[data-until]{ display:none!important; }
-    .hud-line,.count,.hint,.theme-btn,.nav-zone{ display:none!important; }
+    .hud-top, .hud-line, .count, .hint, .theme-btn, .nav-zone, .jump, a[title="В каталог презентаций"]{ display:none!important; }
   }

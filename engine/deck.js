@@ -176,6 +176,28 @@ function __deckInit(){
   document.querySelector('.nav-zone.next').addEventListener('click', next);
   document.querySelector('.nav-zone.prev').addEventListener('click', prev);
   themeBtn.addEventListener('click', toggleTheme);
+
+  // Свайпы на тач-экранах (смартфоны/планшеты)
+  var touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+  document.addEventListener('touchstart', function(e){
+    if(e.touches.length === 1){
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchStartTime = Date.now();
+    }
+  }, { passive: true });
+  document.addEventListener('touchend', function(e){
+    if(!touchStartX || e.changedTouches.length !== 1) return;
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    var dy = e.changedTouches[0].clientY - touchStartY;
+    var dt = Date.now() - touchStartTime;
+    if(Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5 && dt < 600){
+      if(dx < 0) next();
+      else prev();
+    }
+    touchStartX = 0; touchStartY = 0;
+  }, { passive: true });
+
   setTimeout(function(){ hint.classList.add('hide'); }, 7000);
 
   show(cur);
