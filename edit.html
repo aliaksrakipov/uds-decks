@@ -35,6 +35,12 @@ h1{font-family:"Unbounded",sans-serif;font-weight:800;font-size:clamp(24px,4vw,3
   background:var(--panel);border:1px solid var(--line)}
 .slide-row.locked{opacity:.55}
 .slide-row.hidden-row{opacity:.45}
+.slide-row.dragging{opacity:.35}
+.slide-row.drag-over-top{box-shadow:inset 0 2px 0 var(--acc)}
+.slide-row.drag-over-bottom{box-shadow:inset 0 -2px 0 var(--acc)}
+.drag-handle{flex:none;color:var(--mut2);font-size:16px;line-height:1;cursor:grab;user-select:none;padding:0 2px}
+.slide-row:not(.locked){cursor:grab}
+.slide-row:not(.locked):active{cursor:grabbing}
 .slide-row button.eye-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:transparent;
   color:var(--mut);cursor:pointer;font-size:14px;line-height:1;display:grid;place-items:center;flex:none}
 .slide-row button.eye-btn:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
@@ -189,6 +195,11 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
     var row = document.createElement('div');
     row.className = 'slide-row' + (s.locked ? ' locked' : '');
 
+    var handle = document.createElement('div');
+    handle.className = 'drag-handle';
+    handle.textContent = '⠿';
+    handle.title = 'Перетащи, чтобы переставить';
+
     var thumb = document.createElement('div');
     thumb.className = 'thumb-wrap';
     var sectionHtml = extractSection(deckHtml, s.id);
@@ -210,12 +221,54 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
     mv.appendChild(up); mv.appendChild(down);
     var eye = document.createElement('button'); eye.type = 'button'; eye.className = 'eye-btn'; eye.title = 'Скрыть/показать в моей презентации';
 
+    row.appendChild(handle);
     row.appendChild(thumb); row.appendChild(numEl); row.appendChild(titleEl);
     if (!s.locked) row.appendChild(eye);
     row.appendChild(mv);
     row._num = numEl; row._up = up; row._down = down; row._eye = eye;
     rowCache[s.id] = row;
+
+    if (!s.locked) {
+      row.draggable = true;
+      row.addEventListener('dragstart', function(e){
+        dragId = s.id;
+        row.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        try { e.dataTransfer.setData('text/plain', s.id); } catch (err) {}
+      });
+      row.addEventListener('dragend', function(){
+        row.classList.remove('dragging');
+        clearDragMarks();
+        dragId = null;
+      });
+      row.addEventListener('dragover', function(e){
+        if (!dragId || dragId === s.id) return;
+        e.preventDefault(); // обязательно, иначе drop не сработает
+        var before = (e.clientY - row.getBoundingClientRect().top) < row.offsetHeight / 2;
+        clearDragMarks();
+        row.classList.add(before ? 'drag-over-top' : 'drag-over-bottom');
+      });
+      row.addEventListener('drop', function(e){
+        e.preventDefault();
+        clearDragMarks();
+        if (!dragId || dragId === s.id) return;
+        var fromIdx = currentSlides.findIndex(function(x){ return x.id === dragId; });
+        if (fromIdx === -1) return;
+        var before = (e.clientY - row.getBoundingClientRect().top) < row.offsetHeight / 2;
+        var item = currentSlides.splice(fromIdx, 1)[0];
+        var toIdx = currentSlides.findIndex(function(x){ return x.id === s.id; });
+        currentSlides.splice(before ? toIdx : toIdx + 1, 0, item);
+        renderSlides();
+      });
+    }
     return row;
+  }
+
+  var dragId = null;
+  function clearDragMarks(){
+    Array.prototype.forEach.call(document.querySelectorAll('.slide-row'), function(r){
+      r.classList.remove('drag-over-top', 'drag-over-bottom');
+    });
   }
 
   function openDeck(d){
@@ -261,7 +314,7 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
       }
 
       currentSlides.forEach(function(s){ buildRow(s, deckHtml); }); // строим iframe один раз
-      intro.textContent = 'Стрелками ↑↓ переставь слайды, значком глаза — скрой те, что не хочешь показывать. Изменения — только в твоей личной ссылке.';
+      intro.textContent = 'Перетащи слайд мышью, куда нужно, или используй стрелки ↑↓. Значком глаза — скрой те, что не хочешь показывать. Изменения — только в твоей личной ссылке.';
       renderSlides();
     }).catch(function(){
       show('err', 'Не получилось загрузить слайды — обнови страницу.');
