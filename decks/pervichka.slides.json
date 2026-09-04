@@ -1,0 +1,102 @@
+[
+  {
+    "id": "pervichka-titul",
+    "title": "Титул",
+    "locked": true
+  },
+  {
+    "id": "pervichka-vizitka-partnera-vstavlyaet-dvizhok",
+    "title": "Визитка партнёра (вставляет движок)",
+    "locked": true
+  },
+  {
+    "id": "pervichka-komu-podoidet-uds-biznes",
+    "title": "Кому подойдёт UDS Бизнес",
+    "locked": false
+  },
+  {
+    "id": "pervichka-kak-eto-rabotaet",
+    "title": "Как это работает",
+    "locked": false
+  },
+  {
+    "id": "pervichka-formaty-programmy-loyalnosti",
+    "title": "Форматы программы лояльности",
+    "locked": false
+  },
+  {
+    "id": "pervichka-uds-app-intro",
+    "title": "UDS App — интро",
+    "locked": false
+  },
+  {
+    "id": "pervichka-uds-app-skrinshoty-klient-i-biznes",
+    "title": "UDS App — скриншоты: клиент и бизнес",
+    "locked": false
+  },
+  {
+    "id": "pervichka-uds-app-loyalnost-v-deistvii",
+    "title": "UDS App — лояльность в действии",
+    "locked": false
+  },
+  {
+    "id": "pervichka-uds-app-sarafan-i-obratnaya-svyaz",
+    "title": "UDS App — сарафан и обратная связь",
+    "locked": false
+  },
+  {
+    "id": "pervichka-46-mln-skachivanii",
+    "title": "46 млн скачиваний",
+    "locked": false
+  },
+  {
+    "id": "pervichka-uds-biznes-intro",
+    "title": "UDS Бизнес — интро",
+    "locked": false
+  },
+  {
+    "id": "pervichka-kakie-zadachi-reshaet-uds-biznes",
+    "title": "Какие задачи решает UDS Бизнес",
+    "locked": false
+  },
+  {
+    "id": "pervichka-smotrim-vzhivuyu",
+    "title": "Смотрим вживую",
+    "locked": false
+  },
+  {
+    "id": "pervichka-kakie-dengi-mogu-zarabatyvat",
+    "title": "Какие деньги могу зарабатывать?",
+    "locked": false
+  },
+  {
+    "id": "pervichka-shema-deneg-pererisovka-slaida-14-origin",
+    "title": "Схема денег (перерисовка слайда 14 оригинала)",
+    "locked": false
+  },
+  {
+    "id": "pervichka-pakety-opt-slaid-15-originala",
+    "title": "Пакеты ОПТ (слайд 15 оригинала)",
+    "locked": false
+  },
+  {
+    "id": "pervichka-chto-budem-delat",
+    "title": "Что будем делать?",
+    "locked": false
+  },
+  {
+    "id": "pervichka-sistema-raboty-slaid-17-originala",
+    "title": "Система работы (слайд 17 оригинала)",
+    "locked": false
+  },
+  {
+    "id": "pervichka-prinyatie-resheniya-slaid-18-originala",
+    "title": "Принятие решения (слайд 18 оригинала)",
+    "locked": false
+  },
+  {
+    "id": "pervichka-itog-vstrechi-slaid-19-originala",
+    "title": "Итог встречи (слайд 19 оригинала)",
+    "locked": false
+  }
+]

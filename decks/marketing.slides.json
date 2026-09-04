@@ -1,0 +1,207 @@
+[
+  {
+    "id": "marketing-titul",
+    "title": "Титул",
+    "locked": true
+  },
+  {
+    "id": "marketing-vizitka-partnera-vstavlyaet-dvizhok",
+    "title": "Визитка партнёра (вставляет движок)",
+    "locked": true
+  },
+  {
+    "id": "marketing-o-strategicheskom-partnere",
+    "title": "О стратегическом партнёре",
+    "locked": false
+  },
+  {
+    "id": "marketing-nashi-klienty",
+    "title": "Наши клиенты",
+    "locked": false
+  },
+  {
+    "id": "marketing-vnedryai-novoe",
+    "title": "Внедряй новое",
+    "locked": false
+  },
+  {
+    "id": "marketing-haos-vs-sistema",
+    "title": "Хаос vs Система",
+    "locked": false
+  },
+  {
+    "id": "marketing-igra-chisla-vrazbros",
+    "title": "Игра: числа вразброс",
+    "locked": false
+  },
+  {
+    "id": "marketing-igra-chisla-po-poryadku",
+    "title": "Игра: числа по порядку",
+    "locked": false
+  },
+  {
+    "id": "marketing-haotichnyi-marketing",
+    "title": "Хаотичный маркетинг",
+    "locked": false
+  },
+  {
+    "id": "marketing-u-bolshinstva-tolko-haos",
+    "title": "У большинства — только хаос",
+    "locked": false
+  },
+  {
+    "id": "marketing-vopros",
+    "title": "Вопрос",
+    "locked": false
+  },
+  {
+    "id": "marketing-konechno-nuzhen",
+    "title": "Конечно нужен",
+    "locked": false
+  },
+  {
+    "id": "marketing-privlechenie-klientov",
+    "title": "Привлечение клиентов",
+    "locked": false
+  },
+  {
+    "id": "marketing-bilbord",
+    "title": "Билборд",
+    "locked": false
+  },
+  {
+    "id": "marketing-novyh-klientov-net",
+    "title": "Новых клиентов нет",
+    "locked": false
+  },
+  {
+    "id": "marketing-uvidel-i-zabyl",
+    "title": "Увидел и забыл",
+    "locked": false
+  },
+  {
+    "id": "marketing-effektivnaya-reklama",
+    "title": "Эффективная реклама",
+    "locked": false
+  },
+  {
+    "id": "marketing-eto-chast-sistemnogo",
+    "title": "Это часть системного",
+    "locked": false
+  },
+  {
+    "id": "marketing-sistemnyi-marketing",
+    "title": "Системный маркетинг",
+    "locked": false
+  },
+  {
+    "id": "marketing-s-chego-nachinaetsya-marketing",
+    "title": "С чего начинается маркетинг",
+    "locked": false
+  },
+  {
+    "id": "marketing-net-crm-net-marketinga",
+    "title": "Нет CRM = нет маркетинга",
+    "locked": false
+  },
+  {
+    "id": "marketing-crm",
+    "title": "CRM",
+    "locked": false
+  },
+  {
+    "id": "marketing-vse-kanaly-vedut-v-crm",
+    "title": "Все каналы ведут в CRM",
+    "locked": false
+  },
+  {
+    "id": "marketing-struktura-sistemnogo-marketinga",
+    "title": "Структура системного маркетинга",
+    "locked": false
+  },
+  {
+    "id": "marketing-dom-marketinga",
+    "title": "Дом маркетинга",
+    "locked": false
+  },
+  {
+    "id": "marketing-prognoziruemyi-biznes",
+    "title": "Прогнозируемый бизнес",
+    "locked": false
+  },
+  {
+    "id": "marketing-uds-biznes",
+    "title": "UDS Бизнес",
+    "locked": false
+  },
+  {
+    "id": "marketing-osnovnoe-utp",
+    "title": "Основное УТП",
+    "locked": false
+  },
+  {
+    "id": "marketing-podoidet-li-moei-kompanii",
+    "title": "Подойдёт ли моей компании",
+    "locked": false
+  },
+  {
+    "id": "marketing-varianty-programmy-loyalnosti",
+    "title": "Варианты программы лояльности",
+    "locked": false
+  },
+  {
+    "id": "marketing-flagman-miniprilozhenie-v-telegram",
+    "title": "Флагман — миниприложение в Telegram",
+    "locked": false
+  },
+  {
+    "id": "marketing-kak-eto-rabotaet",
+    "title": "Как это работает",
+    "locked": false
+  },
+  {
+    "id": "marketing-otskaniruite-qr-kod",
+    "title": "Отсканируйте QR-код",
+    "locked": false
+  },
+  {
+    "id": "marketing-vygody-dlya-klientov-biznesov",
+    "title": "Выгоды для клиентов бизнесов",
+    "locked": false
+  },
+  {
+    "id": "marketing-kakie-zadachi-reshaet",
+    "title": "Какие задачи решает",
+    "locked": false
+  },
+  {
+    "id": "marketing-vygody-dlya-predprinimatelya",
+    "title": "Выгоды для предпринимателя",
+    "locked": false
+  },
+  {
+    "id": "marketing-stoimost-servisa",
+    "title": "Стоимость сервиса",
+    "locked": false
+  },
+  {
+    "id": "marketing-kak-poprobovat",
+    "title": "Как попробовать",
+    "locked": false
+  },
+  {
+    "id": "marketing-pochemu-uds",
+    "title": "Почему UDS",
+    "locked": false
+  },
+  {
+    "id": "marketing-avtomatizaciya-svoboda",
+    "title": "Автоматизация = Свобода",
+    "locked": false
+  },
+  {
+    "id": "marketing-kontakty",
+    "title": "Контакты",
+    "locked": false
+  }
+]

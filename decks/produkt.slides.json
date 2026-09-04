@@ -1,0 +1,102 @@
+[
+  {
+    "id": "produkt-titul",
+    "title": "Титул",
+    "locked": true
+  },
+  {
+    "id": "produkt-vizitka-spikera-vstavlyaet-dvizhok-iz-p",
+    "title": "Визитка спикера (вставляет движок из ?p=)",
+    "locked": true
+  },
+  {
+    "id": "produkt-kratko-pro-nas",
+    "title": "Кратко про нас",
+    "locked": false
+  },
+  {
+    "id": "produkt-komu-podhodit",
+    "title": "Кому подходит",
+    "locked": false
+  },
+  {
+    "id": "produkt-nashi-klienty",
+    "title": "Наши клиенты",
+    "locked": false
+  },
+  {
+    "id": "produkt-kak-eto-rabotaet",
+    "title": "Как это работает",
+    "locked": false
+  },
+  {
+    "id": "produkt-varianty-programmy-loyalnosti",
+    "title": "Варианты программы лояльности",
+    "locked": false
+  },
+  {
+    "id": "produkt-zhivye-primery-qr",
+    "title": "Живые примеры: QR",
+    "locked": false
+  },
+  {
+    "id": "produkt-uds-app",
+    "title": "uds App",
+    "locked": false
+  },
+  {
+    "id": "produkt-uds-app-ekrany-1-klient-i-katalog",
+    "title": "UDS App — экраны 1: клиент и каталог",
+    "locked": false
+  },
+  {
+    "id": "produkt-uds-app-ekrany-2-loyalnost-i-oplata",
+    "title": "UDS App — экраны 2: лояльность и оплата",
+    "locked": false
+  },
+  {
+    "id": "produkt-uds-app-ekrany-3-sarafan-i-otzyvy",
+    "title": "UDS App — экраны 3: сарафан и отзывы",
+    "locked": false
+  },
+  {
+    "id": "produkt-vygody-dlya-klientov-biznesov",
+    "title": "Выгоды для клиентов бизнесов",
+    "locked": false
+  },
+  {
+    "id": "produkt-flagman-miniprilozhenie-v-telegram",
+    "title": "Флагман: миниприложение в Telegram",
+    "locked": false
+  },
+  {
+    "id": "produkt-uds-biznes",
+    "title": "uds Бизнес",
+    "locked": false
+  },
+  {
+    "id": "produkt-kakie-zadachi-reshaet",
+    "title": "Какие задачи решает",
+    "locked": false
+  },
+  {
+    "id": "produkt-videoobzor-korotko-o-uds-biznes",
+    "title": "Видеообзор: Коротко о UDS Бизнес",
+    "locked": false
+  },
+  {
+    "id": "produkt-vygody-dlya-predprinimatelya",
+    "title": "Выгоды для предпринимателя",
+    "locked": false
+  },
+  {
+    "id": "produkt-tarify",
+    "title": "Тарифы",
+    "locked": false
+  },
+  {
+    "id": "produkt-final",
+    "title": "Финал",
+    "locked": false
+  }
+]
