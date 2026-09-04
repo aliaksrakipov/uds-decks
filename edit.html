@@ -34,6 +34,11 @@ h1{font-family:"Unbounded",sans-serif;font-weight:800;font-size:clamp(24px,4vw,3
 .slide-row{display:flex;align-items:center;gap:14px;padding:10px 16px;border-radius:12px;
   background:var(--panel);border:1px solid var(--line)}
 .slide-row.locked{opacity:.55}
+.slide-row.hidden-row{opacity:.45}
+.slide-row button.eye-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:transparent;
+  color:var(--mut);cursor:pointer;font-size:14px;line-height:1;display:grid;place-items:center;flex:none}
+.slide-row button.eye-btn:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
+.slide-row button.eye-btn.off{color:#f0aab6;border-color:rgba(220,60,80,.4)}
 .thumb-wrap{width:128px;height:72px;flex:none;border-radius:8px;overflow:hidden;background:#0E0E15;border:1px solid var(--line);position:relative}
 .thumb-wrap iframe{width:100%;height:100%;border:0;display:block;pointer-events:none}
 .thumb-wrap .thumb-fallback{position:absolute;inset:0;display:grid;place-items:center;color:var(--mut2);font-size:11px}
@@ -72,7 +77,7 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
   <div id="orderBlock" hidden>
     <div class="slides" id="slides"></div>
     <div class="actions">
-      <button class="send" id="saveOrder" type="button">Сохранить порядок</button>
+      <button class="send" id="saveOrder" type="button">Сохранить изменения</button>
       <button class="ghost" id="backToPick" type="button">← К выбору презентации</button>
     </div>
   </div>
@@ -101,7 +106,7 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
   }
 
   var DECKS = [
-    { id: 'produkt', name: 'Продукт UDS', hint: '20 слайдов' },
+    { id: 'produkt', name: 'Продукт UDS', hint: '24 слайда' },
     { id: 'marketing', name: 'Marketing', hint: '41 слайд' },
     { id: 'pervichka', name: 'Первичка', hint: '20 слайдов' }
   ];
@@ -110,6 +115,7 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
   var currentDeck = null;
   var currentData = null;   // весь jsonb из deck_customizations (сохраняем прочие ключи при записи)
   var currentSlides = null; // рабочий массив редактируемых слайдов [{id,title}]
+  var currentHidden = {};   // {slideId: true} — какие скрыты в этой личной версии
 
   var pickBlock = document.getElementById('pickBlock');
   var orderBlock = document.getElementById('orderBlock');
@@ -202,9 +208,12 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
     var up = document.createElement('button'); up.type = 'button'; up.className = 'mv-btn'; up.textContent = '↑';
     var down = document.createElement('button'); down.type = 'button'; down.className = 'mv-btn'; down.textContent = '↓';
     mv.appendChild(up); mv.appendChild(down);
+    var eye = document.createElement('button'); eye.type = 'button'; eye.className = 'eye-btn'; eye.title = 'Скрыть/показать в моей презентации';
 
-    row.appendChild(thumb); row.appendChild(numEl); row.appendChild(titleEl); row.appendChild(mv);
-    row._num = numEl; row._up = up; row._down = down;
+    row.appendChild(thumb); row.appendChild(numEl); row.appendChild(titleEl);
+    if (!s.locked) row.appendChild(eye);
+    row.appendChild(mv);
+    row._num = numEl; row._up = up; row._down = down; row._eye = eye;
     rowCache[s.id] = row;
     return row;
   }
@@ -231,6 +240,8 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
       var savedRow = (res[2] && res[2][0]) || null;
       currentData = (savedRow && savedRow.data) || {};
       var savedOrder = currentData.order;
+      currentHidden = {};
+      (currentData.hidden || []).forEach(function(sid){ currentHidden[sid] = true; });
 
       var eligible = manifest.filter(function(s){ return !s.locked; });
       var byId = {};
@@ -250,7 +261,7 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
       }
 
       currentSlides.forEach(function(s){ buildRow(s, deckHtml); }); // строим iframe один раз
-      intro.textContent = 'Стрелками переставь слайды в нужном порядке — так они пойдут в твоей презентации.';
+      intro.textContent = 'Стрелками ↑↓ переставь слайды, значком глаза — скрой те, что не хочешь показывать. Изменения — только в твоей личной ссылке.';
       renderSlides();
     }).catch(function(){
       show('err', 'Не получилось загрузить слайды — обнови страницу.');
@@ -261,11 +272,21 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
     var wrap = document.getElementById('slides');
     currentSlides.forEach(function(s, i){
       var row = rowCache[s.id];
+      var isHidden = !!currentHidden[s.id];
       row._num.textContent = i + 1;
       row._up.disabled = (i === 0);
       row._down.disabled = (i === currentSlides.length - 1);
       row._up.onclick = function(){ moveSlide(i, -1); };
       row._down.onclick = function(){ moveSlide(i, 1); };
+      if (row._eye) {
+        row.classList.toggle('hidden-row', isHidden);
+        row._eye.textContent = isHidden ? '🚫' : '👁';
+        row._eye.className = 'eye-btn' + (isHidden ? ' off' : '');
+        row._eye.onclick = function(){
+          if (isHidden) delete currentHidden[s.id]; else currentHidden[s.id] = true;
+          renderSlides();
+        };
+      }
       wrap.appendChild(row); // appendChild на уже прикреплённом узле — переносит его в конец, не пересоздавая iframe
     });
   }
@@ -286,6 +307,7 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
     var newData = {};
     for (var k in currentData) newData[k] = currentData[k];
     newData.order = currentSlides.map(function(s){ return s.id; });
+    newData.hidden = Object.keys(currentHidden).filter(function(k){ return currentHidden[k]; });
     window.UdsAuth.authFetch('/rest/v1/deck_customizations', {
       method: 'POST',
       headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
@@ -294,10 +316,10 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
       if (!r.ok) return r.json().then(function(j){ throw new Error((j && j.message) || 'Ошибка'); });
       currentData = newData;
       show('ok', '✅ Порядок сохранён — открой свою ссылку на презентацию, чтобы проверить.');
-      btn.disabled = false; btn.textContent = 'Сохранить порядок';
+      btn.disabled = false; btn.textContent = 'Сохранить изменения';
     }).catch(function(err){
       show('err', window.UdsAuth.translateError(err.message));
-      btn.disabled = false; btn.textContent = 'Сохранить порядок';
+      btn.disabled = false; btn.textContent = 'Сохранить изменения';
     });
   };
 })();

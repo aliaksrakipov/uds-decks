@@ -90,6 +90,26 @@
     "locked": false
   },
   {
+    "id": "produkt-keis-savvali-kak-bylo",
+    "title": "Кейс SAVVALI: как было",
+    "locked": false
+  },
+  {
+    "id": "produkt-keis-savvali-chto-sdelali",
+    "title": "Кейс SAVVALI: что сделали",
+    "locked": false
+  },
+  {
+    "id": "produkt-keis-savvali-rezultat",
+    "title": "Кейс SAVVALI: результат",
+    "locked": false
+  },
+  {
+    "id": "produkt-keis-nicecar",
+    "title": "Кейс Nicecar",
+    "locked": false
+  },
+  {
     "id": "produkt-tarify",
     "title": "Тарифы",
     "locked": false

@@ -53,6 +53,7 @@ SECTION_RE = re.compile(r'<section class="slide"[^>]*>')
 for deck in DECKS:
     path = os.path.join(BASE, 'decks', deck + '.html')
     s = io.open(path, encoding='utf-8').read()
+    s = re.sub(r' data-slide-id="[^"]*"', '', s)  # идемпотентность: снимаем старые id перед перегенерацией
 
     comments = list(COMMENT_RE.finditer(s))
     sections = list(SECTION_RE.finditer(s))
