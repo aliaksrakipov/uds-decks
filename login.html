@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UDS — личный кабинет партнёра</title>
+<style>
+@font-face{font-family:'Unbounded';font-weight:800;font-style:normal;font-display:swap;src:url(assets/fonts/unbounded-800.woff2) format('woff2');}
+@font-face{font-family:'Inter';font-weight:100 900;font-style:normal;font-display:swap;src:url(assets/fonts/inter-var.woff2) format('woff2');}
+*{box-sizing:border-box;margin:0}
+body{
+  --bg:#0E0E15; --panel:rgba(255,255,255,.045); --line:rgba(255,255,255,.13);
+  --ink:#EDEEF4; --mut:#a9aec2; --mut2:#8b90a5;
+  --acc:#A78BFA; --acc2:#7C3AED; --acc-dim:rgba(124,58,237,.20);
+  background:
+    radial-gradient(90% 60% at 85% -10%, #251F3E 0%, transparent 55%),
+    radial-gradient(70% 50% at 5% 110%, #1B1730 0%, transparent 60%),
+    var(--bg);
+  background-attachment:fixed;
+  color:var(--ink); font-family:"Inter",-apple-system,sans-serif;
+  min-height:100vh; padding:48px 24px 80px;
+}
+.wrap{max-width:520px;margin:0 auto}
+.logo{font-family:"Unbounded",sans-serif;font-weight:800;font-size:22px}
+.logo span{color:var(--mut2);font-weight:400;font-family:"Inter",sans-serif;margin-left:10px;font-size:17px}
+h1{font-family:"Unbounded",sans-serif;font-weight:800;font-size:clamp(24px,4vw,34px);line-height:1.2;margin-top:36px}
+.sub{color:var(--mut);font-size:15.5px;margin-top:12px;line-height:1.5}
+.tabs{display:flex;gap:8px;margin-top:32px}
+.tab{flex:1;text-align:center;padding:11px;border-radius:99px;border:1px solid var(--line);background:transparent;
+  color:var(--mut);font:600 14px/1 "Inter",sans-serif;cursor:pointer}
+.tab.on{background:var(--acc-dim);border-color:rgba(167,139,250,.5);color:var(--ink)}
+form{margin-top:22px;display:flex;flex-direction:column;gap:16px}
+label{display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--mut);font-weight:600}
+label b{color:var(--ink)}
+label small{font-weight:400;color:var(--mut2)}
+input[type=text],input[type=email],input[type=password],select{
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--ink);
+  font:400 15px/1.45 "Inter",sans-serif;padding:12px 14px;outline:none}
+input:focus,select:focus{border-color:rgba(167,139,250,.55)}
+select{appearance:none;-webkit-appearance:none}
+button.send{margin-top:6px;padding:14px 26px;border-radius:99px;border:none;cursor:pointer;
+  background:linear-gradient(120deg,var(--acc2),var(--acc));color:#fff;font:600 16px/1 "Inter",sans-serif}
+button.send:hover{filter:brightness(1.12)}
+button.send:disabled{opacity:.5;cursor:default;filter:none}
+button.ghost{margin-top:4px;padding:11px 22px;border-radius:99px;border:1px solid var(--line);background:transparent;
+  color:var(--mut);font:600 14px/1 "Inter",sans-serif;cursor:pointer}
+button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
+.msg{padding:14px 18px;border-radius:12px;font-size:14.5px;line-height:1.5;display:none;margin-top:18px}
+.msg.err{display:block;background:rgba(220,60,80,.12);border:1px solid rgba(220,60,80,.4);color:#f0aab6}
+.msg.ok{display:block;background:rgba(60,200,120,.1);border:1px solid rgba(60,200,120,.35);color:#9fe0bb}
+.msg.info{display:block;background:var(--acc-dim);border:1px solid rgba(167,139,250,.4);color:var(--ink)}
+.msg a{color:var(--acc)}
+.card{margin-top:26px;padding:22px 24px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
+.card .who{font-family:"Unbounded",sans-serif;font-weight:800;font-size:19px}
+.card .role{color:var(--mut);font-size:14px;margin-top:6px}
+.card .actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.card .actions a.go{display:inline-block;padding:11px 20px;border-radius:99px;background:linear-gradient(120deg,var(--acc2),var(--acc));
+  color:#fff;font:600 14px/1 "Inter",sans-serif;text-decoration:none}
+.back{display:inline-block;margin-top:28px;color:var(--mut2);font-size:14px;text-decoration:none}
+.back:hover{color:var(--ink)}
+[hidden]{display:none!important}
+</style>
+</head><body>
+<div class="wrap">
+  <div class="logo">uds<span>Partner · кабинет</span></div>
+  <h1>Личный кабинет</h1>
+  <p class="sub" id="intro">Войди или зарегистрируйся, чтобы привязать логин к своему профилю партнёра и в будущем редактировать свои презентации.</p>
+
+  <div id="authBlock">
+    <div class="tabs">
+      <button class="tab on" id="tabIn" type="button">Войти</button>
+      <button class="tab" id="tabUp" type="button">Регистрация</button>
+    </div>
+    <form id="authForm">
+      <label><b>Email</b>
+        <input type="email" id="email" autocomplete="email" required>
+      </label>
+      <label><b>Пароль</b><small id="pwHint">Минимум 6 символов</small>
+        <input type="password" id="password" autocomplete="current-password" required minlength="6">
+      </label>
+      <button class="send" id="authSend" type="submit">Войти</button>
+    </form>
+  </div>
+
+  <div id="linkBlock" hidden>
+    <p class="sub">Аккаунт создан. Теперь привяжи его к своему профилю партнёра — понадобится то же кодовое слово, что и для формы «Добавить спикера».</p>
+    <form id="linkForm">
+      <label><b>Я — это</b>
+        <select id="partnerSelect" required><option value="">Загружаю список…</option></select>
+      </label>
+      <label><b>Кодовое слово</b>
+        <input type="text" id="secret" autocomplete="off" required>
+      </label>
+      <button class="send" id="linkSend" type="submit">Привязать</button>
+    </form>
+    <button class="ghost" id="logout1" type="button">Выйти</button>
+  </div>
+
+  <div id="doneBlock" hidden>
+    <div class="card">
+      <div class="who" id="doneName"></div>
+      <div class="role" id="doneRole"></div>
+      <div class="actions">
+        <a class="go" id="doneOpen" href="index.html">Открыть свой каталог</a>
+        <button class="ghost" id="logout2" type="button">Выйти</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="msg" id="msg"></div>
+  <a class="back" href="index.html">← Назад в каталог</a>
+</div>
+
+<script src="config.js"></script>
+<script src="engine/auth.js"></script>
+<script>
+(function(){
+  var cfg = window.SITE_CONFIG || {};
+  var msg = document.getElementById('msg');
+  var mode = 'in'; // 'in' | 'up'
+
+  function show(kind, html){ msg.className = 'msg ' + kind; msg.innerHTML = html; }
+  function clearMsg(){ msg.className = 'msg'; msg.innerHTML = ''; }
+
+  if (!cfg.supabaseUrl || !cfg.supabaseAnonKey) {
+    show('err', 'Кабинет пока не подключён к базе.');
+    document.getElementById('authForm').style.display = 'none';
+    return;
+  }
+
+  var els = {
+    auth: document.getElementById('authBlock'),
+    link: document.getElementById('linkBlock'),
+    done: document.getElementById('doneBlock'),
+    intro: document.getElementById('intro')
+  };
+  function screen(name){
+    els.auth.hidden = name !== 'auth';
+    els.link.hidden = name !== 'link';
+    els.done.hidden = name !== 'done';
+  }
+
+  // ---------- шаг 1: вход / регистрация ----------
+  document.getElementById('tabIn').onclick = function(){ setMode('in'); };
+  document.getElementById('tabUp').onclick = function(){ setMode('up'); };
+  function setMode(m){
+    mode = m;
+    document.getElementById('tabIn').className = 'tab' + (m === 'in' ? ' on' : '');
+    document.getElementById('tabUp').className = 'tab' + (m === 'up' ? ' on' : '');
+    document.getElementById('authSend').textContent = m === 'in' ? 'Войти' : 'Зарегистрироваться';
+    document.getElementById('password').autocomplete = m === 'in' ? 'current-password' : 'new-password';
+    clearMsg();
+  }
+
+  document.getElementById('authForm').onsubmit = function(e){
+    e.preventDefault();
+    var email = document.getElementById('email').value.trim();
+    var password = document.getElementById('password').value;
+    var btn = document.getElementById('authSend');
+    btn.disabled = true;
+    clearMsg();
+    var action = mode === 'in' ? window.UdsAuth.signIn(email, password) : window.UdsAuth.signUp(email, password);
+    action.then(function(){
+      if (!window.UdsAuth.isLoggedIn()) {
+        // регистрация прошла, но проект требует подтверждение по почте
+        show('info', 'Аккаунт создан. Проверь почту и подтверди email, потом зайди через «Войти».');
+        setMode('in');
+        btn.disabled = false;
+        return;
+      }
+      afterLogin();
+    }).catch(function(err){
+      var m = err.message || 'Что-то пошло не так';
+      if (/already registered|already exists/i.test(m)) m = 'Такой email уже зарегистрирован — попробуй «Войти».';
+      if (/invalid login credentials/i.test(m)) m = 'Неверный email или пароль.';
+      show('err', m);
+      btn.disabled = false;
+    });
+  };
+
+  // ---------- шаг 2: проверяем, привязан ли уже аккаунт к партнёру ----------
+  function afterLogin(){
+    clearMsg();
+    window.UdsAuth.authFetch('/rest/v1/partner_accounts?select=partner_id')
+      .then(function(r){ return r.json(); })
+      .then(function(rows){
+        if (Array.isArray(rows) && rows.length) {
+          showLinked(rows[0].partner_id);
+        } else {
+          showLinkForm();
+        }
+      })
+      .catch(function(){ showLinkForm(); });
+  }
+
+  function showLinkForm(){
+    screen('link');
+    els.intro.textContent = 'Вход выполнен.';
+    var sel = document.getElementById('partnerSelect');
+    fetch(cfg.supabaseUrl + '/rest/v1/partners_ext?select=id,name&order=name', {
+      headers: { apikey: cfg.supabaseAnonKey, Authorization: 'Bearer ' + cfg.supabaseAnonKey }
+    }).then(function(r){ return r.json(); }).then(function(rows){
+      sel.innerHTML = '<option value="">Выбери себя из списка</option>';
+      (rows || []).forEach(function(p){
+        var o = document.createElement('option');
+        o.value = p.id; o.textContent = p.name;
+        sel.appendChild(o);
+      });
+    }).catch(function(){
+      sel.innerHTML = '<option value="">Не удалось загрузить список</option>';
+    });
+  }
+
+  document.getElementById('linkForm').onsubmit = function(e){
+    e.preventDefault();
+    var pid = document.getElementById('partnerSelect').value;
+    var secret = document.getElementById('secret').value.trim();
+    if (!pid) { show('err', 'Выбери себя из списка.'); return; }
+    var btn = document.getElementById('linkSend');
+    btn.disabled = true; btn.textContent = 'Привязываю…';
+    clearMsg();
+    window.UdsAuth.authFetch('/rest/v1/rpc/link_partner_account', {
+      method: 'POST',
+      body: JSON.stringify({ secret: secret, p_partner_id: pid })
+    }).then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
+      .then(function(res){
+        if (res.ok) {
+          showLinked(pid);
+        } else {
+          var m = (res.j && res.j.message) || 'что-то пошло не так';
+          if (/wrong secret/.test(m)) m = 'Неверное кодовое слово.';
+          if (/unknown partner/.test(m)) m = 'Такого профиля ещё нет — сначала заведи анкету через «Добавить нового спикера».';
+          if (/уже привязан/.test(m)) m = m;
+          show('err', m);
+          btn.disabled = false; btn.textContent = 'Привязать';
+        }
+      })
+      .catch(function(){
+        show('err', 'Сеть недоступна — попробуй ещё раз.');
+        btn.disabled = false; btn.textContent = 'Привязать';
+      });
+  };
+
+  // ---------- шаг 3: готово ----------
+  function showLinked(partnerId){
+    clearMsg();
+    screen('done');
+    els.intro.textContent = 'Аккаунт привязан.';
+    fetch(cfg.supabaseUrl + '/rest/v1/partners_ext?select=name,role&id=eq.' + encodeURIComponent(partnerId), {
+      headers: { apikey: cfg.supabaseAnonKey, Authorization: 'Bearer ' + cfg.supabaseAnonKey }
+    }).then(function(r){ return r.json(); }).then(function(rows){
+      var p = (rows || [])[0] || {};
+      document.getElementById('doneName').textContent = p.name || partnerId;
+      document.getElementById('doneRole').textContent = p.role || '';
+    });
+    document.getElementById('doneOpen').href = 'index.html?p=' + encodeURIComponent(partnerId);
+  }
+
+  function doLogout(){
+    window.UdsAuth.signOut();
+    clearMsg();
+    screen('auth');
+    els.intro.textContent = 'Войди или зарегистрируйся, чтобы привязать логин к своему профилю партнёра и в будущем редактировать свои презентации.';
+    setMode('in');
+  }
+  document.getElementById('logout1').onclick = doLogout;
+  document.getElementById('logout2').onclick = doLogout;
+
+  // ---------- при заходе на страницу уже с активной сессией ----------
+  if (window.UdsAuth.isLoggedIn()) afterLogin();
+})();
+</script>
+</body></html>
