@@ -50,6 +50,47 @@ window.UdsAuth = (function(){
 
   function signOut(){ clear(); }
 
+  // письмо со ссылкой на смену пароля. redirectTo — куда попадёт партнёр по ссылке
+  // из письма (должен быть в списке Redirect URLs в Supabase Dashboard → Auth →
+  // URL Configuration, иначе Supabase откажется редиректить).
+  function recover(email, redirectTo){
+    var url = cfg.supabaseUrl + '/auth/v1/recover' +
+      (redirectTo ? '?redirect_to=' + encodeURIComponent(redirectTo) : '');
+    return fetch(url, {
+      method: 'POST',
+      headers: { apikey: cfg.supabaseAnonKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(r){
+      if (r.ok) return true;
+      return r.json().then(function(j){ throw new Error(j.error_description || j.msg || 'Ошибка'); });
+    });
+  }
+
+  // ставит новый пароль по токену из ссылки восстановления и сразу сохраняет
+  // сессию (после смены пароля партнёр остаётся залогинен)
+  function updatePasswordWithToken(accessToken, newPassword){
+    return fetch(cfg.supabaseUrl + '/auth/v1/user', {
+      method: 'PUT',
+      headers: {
+        apikey: cfg.supabaseAnonKey,
+        Authorization: 'Bearer ' + accessToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ password: newPassword })
+    }).then(function(r){
+      return r.json().then(function(j){
+        if (!r.ok) throw new Error(j.error_description || j.msg || 'Ошибка');
+        return j;
+      });
+    });
+  }
+
+  // сохранить сессию напрямую (используется после смены пароля по ссылке из письма,
+  // где токен приходит не через signIn/signUp, а прямо в URL)
+  function adoptSession(accessToken, refreshToken, user){
+    save({ access_token: accessToken, refresh_token: refreshToken, user: user });
+  }
+
   // fetch от имени залогиненного партнёра (Authorization = его access_token,
   // а не общий anon key) — нужен для всего, что проверяет auth.uid() на сервере:
   // link_partner_account, запись в deck_customizations.
@@ -67,6 +108,9 @@ window.UdsAuth = (function(){
     signUp: signUp,
     signIn: signIn,
     signOut: signOut,
+    recover: recover,
+    updatePasswordWithToken: updatePasswordWithToken,
+    adoptSession: adoptSession,
     getSession: get,
     isLoggedIn: function(){ return !!get(); },
     authFetch: authFetch

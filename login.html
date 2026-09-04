@@ -51,11 +51,15 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
 .card{margin-top:26px;padding:22px 24px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
 .card .who{font-family:"Unbounded",sans-serif;font-weight:800;font-size:19px}
 .card .role{color:var(--mut);font-size:14px;margin-top:6px}
-.card .actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.card .actions{display:flex;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
 .card .actions a.go{display:inline-block;padding:11px 20px;border-radius:99px;background:linear-gradient(120deg,var(--acc2),var(--acc));
-  color:#fff;font:600 14px/1 "Inter",sans-serif;text-decoration:none}
+  color:#fff;font:600 14px/1 "Inter",sans-serif;text-decoration:none;line-height:1;box-sizing:border-box}
+.card .actions button.ghost{margin-top:0}
 .back{display:inline-block;margin-top:28px;color:var(--mut2);font-size:14px;text-decoration:none}
 .back:hover{color:var(--ink)}
+.linklike{background:none;border:none;padding:0;color:var(--mut2);font:400 13.5px/1 "Inter",sans-serif;
+  text-decoration:underline;cursor:pointer;align-self:flex-start}
+.linklike:hover{color:var(--ink)}
 [hidden]{display:none!important}
 </style>
 </head><body>
@@ -76,7 +80,22 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
       <label><b>Пароль</b><small id="pwHint">Минимум 6 символов</small>
         <input type="password" id="password" autocomplete="current-password" required minlength="6">
       </label>
+      <label id="pw2Wrap" hidden><b>Повтори пароль</b>
+        <input type="password" id="password2" autocomplete="new-password" minlength="6">
+      </label>
       <button class="send" id="authSend" type="submit">Войти</button>
+      <button class="linklike" id="forgotBtn" type="button">Забыл пароль?</button>
+    </form>
+  </div>
+
+  <div id="recoverBlock" hidden>
+    <p class="sub">Пришлём письмо со ссылкой на смену пароля.</p>
+    <form id="recoverForm">
+      <label><b>Email</b>
+        <input type="email" id="recoverEmail" autocomplete="email" required>
+      </label>
+      <button class="send" id="recoverSend" type="submit">Отправить письмо</button>
+      <button class="linklike" id="backToAuth" type="button">← Назад к входу</button>
     </form>
   </div>
 
@@ -128,12 +147,14 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
 
   var els = {
     auth: document.getElementById('authBlock'),
+    recover: document.getElementById('recoverBlock'),
     link: document.getElementById('linkBlock'),
     done: document.getElementById('doneBlock'),
     intro: document.getElementById('intro')
   };
   function screen(name){
     els.auth.hidden = name !== 'auth';
+    els.recover.hidden = name !== 'recover';
     els.link.hidden = name !== 'link';
     els.done.hidden = name !== 'done';
   }
@@ -147,16 +168,49 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
     document.getElementById('tabUp').className = 'tab' + (m === 'up' ? ' on' : '');
     document.getElementById('authSend').textContent = m === 'in' ? 'Войти' : 'Зарегистрироваться';
     document.getElementById('password').autocomplete = m === 'in' ? 'current-password' : 'new-password';
+    document.getElementById('pw2Wrap').hidden = (m !== 'up');
+    document.getElementById('password2').required = (m === 'up');
+    document.getElementById('forgotBtn').hidden = (m !== 'in');
     clearMsg();
   }
+
+  document.getElementById('forgotBtn').onclick = function(){
+    document.getElementById('recoverEmail').value = document.getElementById('email').value.trim();
+    clearMsg();
+    screen('recover');
+  };
+  document.getElementById('backToAuth').onclick = function(){
+    clearMsg();
+    screen('auth');
+  };
+
+  document.getElementById('recoverForm').onsubmit = function(e){
+    e.preventDefault();
+    var email = document.getElementById('recoverEmail').value.trim();
+    var btn = document.getElementById('recoverSend');
+    btn.disabled = true; btn.textContent = 'Отправляю…';
+    clearMsg();
+    var redirectTo = new URL('reset-password.html', location.href).href;
+    window.UdsAuth.recover(email, redirectTo).then(function(){
+      show('ok', 'Если такой email зарегистрирован — письмо со ссылкой уже отправлено. Проверь почту.');
+      btn.disabled = false; btn.textContent = 'Отправить письмо';
+    }).catch(function(err){
+      show('err', err.message || 'Не получилось отправить письмо — попробуй ещё раз.');
+      btn.disabled = false; btn.textContent = 'Отправить письмо';
+    });
+  };
 
   document.getElementById('authForm').onsubmit = function(e){
     e.preventDefault();
     var email = document.getElementById('email').value.trim();
     var password = document.getElementById('password').value;
     var btn = document.getElementById('authSend');
-    btn.disabled = true;
     clearMsg();
+    if (mode === 'up' && password !== document.getElementById('password2').value) {
+      show('err', 'Пароли не совпадают.');
+      return;
+    }
+    btn.disabled = true;
     var action = mode === 'in' ? window.UdsAuth.signIn(email, password) : window.UdsAuth.signUp(email, password);
     action.then(function(){
       if (!window.UdsAuth.isLoggedIn()) {
@@ -169,7 +223,7 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
       afterLogin();
     }).catch(function(err){
       var m = err.message || 'Что-то пошло не так';
-      if (/already registered|already exists/i.test(m)) m = 'Такой email уже зарегистрирован — попробуй «Войти».';
+      if (/already registered|already exists/i.test(m)) m = 'Такой email уже зарегистрирован — попробуй «Войти» или «Забыл пароль?».';
       if (/invalid login credentials/i.test(m)) m = 'Неверный email или пароль.';
       show('err', m);
       btn.disabled = false;
