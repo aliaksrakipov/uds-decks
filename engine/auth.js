@@ -109,6 +109,23 @@ window.UdsAuth = (function(){
     return fetch(cfg.supabaseUrl + path, { method: opts.method, headers: headers, body: opts.body });
   }
 
+  // Единый перевод ошибок Supabase/наших RPC на русский — используется во всех
+  // формах кабинета (login.html, reset-password.html), чтобы нигде не проскакивал
+  // сырой английский текст от Supabase. Раскладка по частоте, не по алфавиту.
+  function translateError(message){
+    var m = String(message || '');
+    if (/rate limit|for security purposes.*once every/i.test(m)) return 'Слишком много попыток за короткое время — подожди немного (обычно около минуты) и попробуй снова.';
+    if (/already registered|already exists|user_already_exists/i.test(m)) return 'Такой email уже зарегистрирован — попробуй «Войти» или «Забыл пароль?».';
+    if (/invalid login credentials/i.test(m)) return 'Неверный email или пароль.';
+    if (/wrong secret/i.test(m)) return 'Неверное кодовое слово.';
+    if (/unknown partner/i.test(m)) return 'Такого профиля ещё нет — сначала заведи анкету через «Добавить нового спикера».';
+    if (/password.*(at least|should be|weak)/i.test(m)) return 'Пароль слишком короткий или простой — минимум 6 символов.';
+    if (/unable to validate email|invalid.*email|email.*invalid/i.test(m)) return 'Проверь адрес почты — похоже, в нём опечатка.';
+    if (/network|failed to fetch|load failed/i.test(m)) return 'Сеть недоступна — попробуй ещё раз.';
+    if (/уже привязан/.test(m)) return m; // из нашей же RPC, уже по-русски
+    return 'Что-то пошло не так. Попробуй ещё раз, а если повторится — напиши Александру.';
+  }
+
   return {
     signUp: signUp,
     signIn: signIn,
@@ -118,6 +135,7 @@ window.UdsAuth = (function(){
     adoptSession: adoptSession,
     getSession: get,
     isLoggedIn: function(){ return !!get(); },
-    authFetch: authFetch
+    authFetch: authFetch,
+    translateError: translateError
   };
 })();

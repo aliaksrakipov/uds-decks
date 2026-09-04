@@ -195,7 +195,7 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
       show('ok', 'Если такой email зарегистрирован — письмо со ссылкой уже отправлено. Проверь почту.');
       btn.disabled = false; btn.textContent = 'Отправить письмо';
     }).catch(function(err){
-      show('err', err.message || 'Не получилось отправить письмо — попробуй ещё раз.');
+      show('err', window.UdsAuth.translateError(err.message));
       btn.disabled = false; btn.textContent = 'Отправить письмо';
     });
   };
@@ -233,10 +233,7 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
       btn.disabled = true;
       btn.textContent = 'Готово';
     }).catch(function(err){
-      var m = err.message || 'Что-то пошло не так';
-      if (/already registered|already exists/i.test(m)) m = 'Такой email уже зарегистрирован — попробуй «Войти» или «Забыл пароль?».';
-      if (/invalid login credentials/i.test(m)) m = 'Неверный email или пароль.';
-      show('err', m);
+      show('err', window.UdsAuth.translateError(err.message));
       btn.disabled = false;
     });
   };
@@ -290,11 +287,7 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
         if (res.ok) {
           showLinked(pid);
         } else {
-          var m = (res.j && res.j.message) || 'что-то пошло не так';
-          if (/wrong secret/.test(m)) m = 'Неверное кодовое слово.';
-          if (/unknown partner/.test(m)) m = 'Такого профиля ещё нет — сначала заведи анкету через «Добавить нового спикера».';
-          if (/уже привязан/.test(m)) m = m;
-          show('err', m);
+          show('err', window.UdsAuth.translateError(res.j && res.j.message));
           btn.disabled = false; btn.textContent = 'Привязать';
         }
       })
