@@ -64,10 +64,17 @@ h1 em{font-style:normal;color:var(--acc)}
 .btn.tg{background:rgba(0,136,204,.12);border-color:rgba(0,136,204,.35);color:#54c7fc}
 .btn.tg:hover{background:rgba(0,136,204,.25);border-color:#54c7fc;color:#fff}
 .foot{margin-top:64px;color:var(--mut2);font-size:13px;border-top:1px solid var(--line);padding-top:18px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.btn.cabinet{padding:9px 18px;border-radius:99px;font:600 13.5px/1 "Inter",sans-serif;text-decoration:none;
+  color:var(--acc);background:var(--acc-dim);border:1px solid rgba(167,139,250,.4);white-space:nowrap}
+.btn.cabinet:hover{border-color:var(--acc);background:rgba(124,58,237,.3)}
 </style>
 </head><body>
 <div class="wrap">
-  <div class="logo">uds<span>Partner · презентации</span></div>
+  <div class="topbar">
+    <div class="logo">uds<span>Partner · презентации</span></div>
+    <a class="btn cabinet" href="login.html">Личный кабинет →</a>
+  </div>
   <h1>Выбери себя и тему —<br>презентация соберётся <em>сама</em></h1>
   <p class="sub">Каждая презентация открывается прямо в браузере: слайд с твоей визиткой подставится автоматически. Ссылку можно отправить клиенту — у него откроется твоя версия.</p>
 
@@ -77,10 +84,7 @@ h1 em{font-style:normal;color:var(--acc)}
       <input type="text" class="p-search" id="pSearch" placeholder="Поиск спикера…" autocomplete="off">
     </div>
     <div class="partners" id="partners"></div>
-    <div style="display:flex; gap:18px; margin-top:14px; flex-wrap:wrap">
-      <a href="add.html" style="color:var(--mut2); font-size:13.5px; text-decoration:none">+ Добавить нового спикера</a>
-      <a href="login.html" style="color:var(--mut2); font-size:13.5px; text-decoration:none">Личный кабинет →</a>
-    </div>
+    <a href="add.html" style="display:inline-block; margin-top:14px; color:var(--mut2); font-size:13.5px; text-decoration:none">+ Добавить нового спикера</a>
   </div>
 
   <div class="step">

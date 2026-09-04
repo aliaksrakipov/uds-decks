@@ -35,6 +35,14 @@ input[type=text],input[type=email],input[type=password],select{
   background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--ink);
   font:400 15px/1.45 "Inter",sans-serif;padding:12px 14px;outline:none}
 input:focus,select:focus{border-color:rgba(167,139,250,.55)}
+/* браузер красит автозаполненные поля своим жёлто-белым фоном поверх любых
+   стилей сайта — перекрашиваем обратно через инсет-тень (обычный background
+   на :-webkit-autofill браузер игнорирует) */
+input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus{
+  -webkit-text-fill-color:var(--ink); caret-color:var(--ink);
+  -webkit-box-shadow:0 0 0 1000px var(--panel) inset; box-shadow:0 0 0 1000px var(--panel) inset;
+  transition:background-color 9999s ease-in-out 0s;
+}
 select{appearance:none;-webkit-appearance:none}
 button.send{margin-top:6px;padding:14px 26px;border-radius:99px;border:none;cursor:pointer;
   background:linear-gradient(120deg,var(--acc2),var(--acc));color:#fff;font:600 16px/1 "Inter",sans-serif}

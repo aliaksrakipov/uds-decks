@@ -18,7 +18,7 @@ body{
   color:var(--ink); font-family:"Inter",-apple-system,sans-serif;
   min-height:100vh; padding:48px 24px 80px;
 }
-.wrap{max-width:640px;margin:0 auto}
+.wrap{max-width:760px;margin:0 auto}
 .logo{font-family:"Unbounded",sans-serif;font-weight:800;font-size:22px}
 .logo span{color:var(--mut2);font-weight:400;font-family:"Inter",sans-serif;margin-left:10px;font-size:17px}
 h1{font-family:"Unbounded",sans-serif;font-weight:800;font-size:clamp(24px,4vw,34px);line-height:1.2;margin-top:36px}
@@ -31,10 +31,13 @@ h1{font-family:"Unbounded",sans-serif;font-weight:800;font-size:clamp(24px,4vw,3
 .deck-card .hint{color:var(--mut2);font-size:13px;margin-top:4px}
 .deck-card .arrow{color:var(--acc);font-size:20px;flex:none}
 .slides{margin-top:26px;display:flex;flex-direction:column;gap:8px}
-.slide-row{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:12px;
+.slide-row{display:flex;align-items:center;gap:14px;padding:10px 16px;border-radius:12px;
   background:var(--panel);border:1px solid var(--line)}
 .slide-row.locked{opacity:.55}
-.slide-row .num{width:24px;flex:none;color:var(--mut2);font-size:13px;font-variant-numeric:tabular-nums}
+.thumb-wrap{width:128px;height:72px;flex:none;border-radius:8px;overflow:hidden;background:#0E0E15;border:1px solid var(--line);position:relative}
+.thumb-wrap iframe{width:100%;height:100%;border:0;display:block;pointer-events:none}
+.thumb-wrap .thumb-fallback{position:absolute;inset:0;display:grid;place-items:center;color:var(--mut2);font-size:11px}
+.slide-row .num{width:20px;flex:none;color:var(--mut2);font-size:13px;font-variant-numeric:tabular-nums}
 .slide-row .title{flex:1;font-size:14.5px}
 .slide-row .mv{display:flex;gap:4px;flex:none}
 .slide-row button.mv-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:transparent;
@@ -144,9 +147,72 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
   }
   document.getElementById('backToPick').onclick = function(){ clearMsg(); showPicker(); };
 
+  var rowCache = {}; // slide id -> DOM-строка с уже загруженным iframe-превью (не пересоздаём при перестановке)
+  var SITE_BASE = new URL('.', location.href).href;
+
+  // вырезает <section data-slide-id="..."> из сырого HTML деки как текст —
+  // без полного DOMParser+сериализации, чтобы не потерять self-closing
+  // тонкости и не тянуть на каждый слайд лишнюю работу
+  function extractSection(deckHtml, slideId){
+    var marker = 'data-slide-id="' + slideId + '"';
+    var i = deckHtml.indexOf(marker);
+    if (i === -1) return null;
+    var openStart = deckHtml.lastIndexOf('<section', i);
+    if (openStart === -1) return null;
+    var closeTag = '</section>';
+    var closeAt = deckHtml.indexOf(closeTag, i);
+    if (closeAt === -1) return null;
+    return deckHtml.slice(openStart, closeAt + closeTag.length);
+  }
+
+  // превью — реальная разметка слайда в изолированном iframe (свой deck.css,
+  // свой document) в масштабе .08, никак не завязана на стили страницы редактора
+  function buildThumbSrcdoc(sectionHtml){
+    var fixed = sectionHtml.replace(/(src|href)="\.\.\//g, '$1="'); // ../assets -> assets (edit.html в корне, деки — на уровень глубже)
+    return '<!doctype html><html><head><base href="' + SITE_BASE + '">' +
+      '<link rel="stylesheet" href="engine/deck.css">' +
+      '<style>html,body{margin:0;overflow:hidden;background:#0E0E15}' +
+      '.mini{width:1600px;height:900px;position:relative;container-type:inline-size;transform:scale(.08);transform-origin:top left}' +
+      '.mini .slide{position:relative!important;inset:auto!important;opacity:1!important;visibility:visible!important;width:100%;height:100%}' +
+      '.mini .a,.mini .frag{opacity:1!important;transform:none!important}' +
+      '</style></head><body><div class="mini">' + fixed + '</div></body></html>';
+  }
+
+  function buildRow(s, deckHtml){
+    if (rowCache[s.id]) return rowCache[s.id];
+    var row = document.createElement('div');
+    row.className = 'slide-row' + (s.locked ? ' locked' : '');
+
+    var thumb = document.createElement('div');
+    thumb.className = 'thumb-wrap';
+    var sectionHtml = extractSection(deckHtml, s.id);
+    if (sectionHtml) {
+      var frame = document.createElement('iframe');
+      frame.loading = 'lazy';
+      frame.scrolling = 'no';
+      frame.srcdoc = buildThumbSrcdoc(sectionHtml);
+      thumb.appendChild(frame);
+    } else {
+      thumb.innerHTML = '<div class="thumb-fallback">нет превью</div>';
+    }
+
+    var numEl = document.createElement('div'); numEl.className = 'num';
+    var titleEl = document.createElement('div'); titleEl.className = 'title'; titleEl.textContent = s.title;
+    var mv = document.createElement('div'); mv.className = 'mv';
+    var up = document.createElement('button'); up.type = 'button'; up.className = 'mv-btn'; up.textContent = '↑';
+    var down = document.createElement('button'); down.type = 'button'; down.className = 'mv-btn'; down.textContent = '↓';
+    mv.appendChild(up); mv.appendChild(down);
+
+    row.appendChild(thumb); row.appendChild(numEl); row.appendChild(titleEl); row.appendChild(mv);
+    row._num = numEl; row._up = up; row._down = down;
+    rowCache[s.id] = row;
+    return row;
+  }
+
   function openDeck(d){
     clearMsg();
     currentDeck = d.id;
+    rowCache = {};
     document.getElementById('h1').textContent = d.name;
     intro.textContent = 'Загружаю слайды…';
     pickBlock.hidden = true;
@@ -155,12 +221,14 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
 
     Promise.all([
       fetch('decks/' + d.id + '.slides.json').then(function(r){ return r.json(); }),
+      fetch('decks/' + d.id + '.html').then(function(r){ return r.text(); }),
       window.UdsAuth.authFetch('/rest/v1/deck_customizations?select=data&partner_id=eq.' +
         encodeURIComponent(partnerId) + '&deck=eq.' + encodeURIComponent(d.id))
         .then(function(r){ return r.json(); })
     ]).then(function(res){
       var manifest = res[0] || [];
-      var savedRow = (res[1] && res[1][0]) || null;
+      var deckHtml = res[1] || '';
+      var savedRow = (res[2] && res[2][0]) || null;
       currentData = (savedRow && savedRow.data) || {};
       var savedOrder = currentData.order;
 
@@ -181,6 +249,7 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
         currentSlides = eligible.slice();
       }
 
+      currentSlides.forEach(function(s){ buildRow(s, deckHtml); }); // строим iframe один раз
       intro.textContent = 'Стрелками переставь слайды в нужном порядке — так они пойдут в твоей презентации.';
       renderSlides();
     }).catch(function(){
@@ -190,21 +259,14 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
 
   function renderSlides(){
     var wrap = document.getElementById('slides');
-    wrap.innerHTML = '';
     currentSlides.forEach(function(s, i){
-      var row = document.createElement('div');
-      row.className = 'slide-row';
-      row.innerHTML =
-        '<div class="num">' + (i + 1) + '</div>' +
-        '<div class="title">' + s.title + '</div>' +
-        '<div class="mv">' +
-          '<button type="button" class="mv-btn" data-dir="-1" ' + (i === 0 ? 'disabled' : '') + '>↑</button>' +
-          '<button type="button" class="mv-btn" data-dir="1" ' + (i === currentSlides.length - 1 ? 'disabled' : '') + '>↓</button>' +
-        '</div>';
-      var buttons = row.querySelectorAll('.mv-btn');
-      buttons[0].onclick = function(){ moveSlide(i, -1); };
-      buttons[1].onclick = function(){ moveSlide(i, 1); };
-      wrap.appendChild(row);
+      var row = rowCache[s.id];
+      row._num.textContent = i + 1;
+      row._up.disabled = (i === 0);
+      row._down.disabled = (i === currentSlides.length - 1);
+      row._up.onclick = function(){ moveSlide(i, -1); };
+      row._down.onclick = function(){ moveSlide(i, 1); };
+      wrap.appendChild(row); // appendChild на уже прикреплённом узле — переносит его в конец, не пересоздавая iframe
     });
   }
 

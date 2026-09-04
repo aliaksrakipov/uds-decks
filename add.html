@@ -31,6 +31,11 @@ input[type=text],textarea{
   background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--ink);
   font:400 15px/1.45 "Inter",sans-serif;padding:12px 14px;outline:none}
 input[type=text]:focus,textarea:focus{border-color:rgba(167,139,250,.55)}
+input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus{
+  -webkit-text-fill-color:var(--ink); caret-color:var(--ink);
+  -webkit-box-shadow:0 0 0 1000px var(--panel) inset; box-shadow:0 0 0 1000px var(--panel) inset;
+  transition:background-color 9999s ease-in-out 0s;
+}
 textarea{min-height:110px;resize:vertical}
 .photo-row{display:flex;align-items:center;gap:16px}
 .photo-prev{width:84px;height:84px;border-radius:16px;background:var(--acc-dim);border:1px solid var(--line);
