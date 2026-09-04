@@ -211,7 +211,9 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
       return;
     }
     btn.disabled = true;
-    var action = mode === 'in' ? window.UdsAuth.signIn(email, password) : window.UdsAuth.signUp(email, password);
+    var action = mode === 'in'
+      ? window.UdsAuth.signIn(email, password)
+      : window.UdsAuth.signUp(email, password, new URL('login.html', location.href).href);
     action.then(function(){
       if (!window.UdsAuth.isLoggedIn()) {
         // регистрация прошла, но проект требует подтверждение по почте
@@ -318,8 +320,31 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
   document.getElementById('logout1').onclick = doLogout;
   document.getElementById('logout2').onclick = doLogout;
 
+  // ---------- переход по ссылке из письма-подтверждения email ----------
+  // Supabase кладёт токен во фрагмент адреса: login.html#access_token=...&type=signup.
+  // Специально НЕ логиним по нему автоматически — просим войти самостоятельно,
+  // это осознанный шаг, а не молчаливая подстановка сессии по ссылке из письма.
+  var cameFromEmailConfirm = false;
+  (function handleEmailConfirmRedirect(){
+    var hash = {};
+    location.hash.replace(/^#/, '').split('&').forEach(function(pair){
+      var kv = pair.split('=');
+      if (kv[0]) hash[kv[0]] = decodeURIComponent(kv[1] || '');
+    });
+    if (!hash.access_token || (hash.type !== 'signup' && hash.type !== 'email_change')) return;
+    cameFromEmailConfirm = true;
+    history.replaceState(null, '', location.pathname + location.search); // токен из адресной строки убрать
+    setMode('in');
+    show('ok', '✅ Email подтверждён — войди, чтобы продолжить.');
+    try {
+      var payloadB64 = hash.access_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      var payload = JSON.parse(atob(payloadB64));
+      if (payload.email) document.getElementById('email').value = payload.email;
+    } catch (e) { /* не критично, просто не подставится email */ }
+  })();
+
   // ---------- при заходе на страницу уже с активной сессией ----------
-  if (window.UdsAuth.isLoggedIn()) afterLogin();
+  if (!cameFromEmailConfirm && window.UdsAuth.isLoggedIn()) afterLogin();
 })();
 </script>
 </body></html>

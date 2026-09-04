@@ -32,8 +32,13 @@ window.UdsAuth = (function(){
     });
   }
 
-  function signUp(email, password){
-    return fetch(cfg.supabaseUrl + '/auth/v1/signup', {
+  // redirectTo — куда поведёт письмо-подтверждение (если Supabase его вообще шлёт);
+  // должен быть в Redirect URLs проекта (Auth → URL Configuration), иначе Supabase
+  // откатится на дефолтный Site URL.
+  function signUp(email, password, redirectTo){
+    var url = cfg.supabaseUrl + '/auth/v1/signup' +
+      (redirectTo ? '?redirect_to=' + encodeURIComponent(redirectTo) : '');
+    return fetch(url, {
       method: 'POST',
       headers: { apikey: cfg.supabaseAnonKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email, password: password })
