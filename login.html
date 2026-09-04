@@ -215,14 +215,23 @@ button.ghost:hover{border-color:rgba(167,139,250,.5);color:var(--ink)}
       ? window.UdsAuth.signIn(email, password)
       : window.UdsAuth.signUp(email, password, new URL('login.html', location.href).href);
     action.then(function(){
+      if (mode !== 'up') { afterLogin(); return; }
+      // после регистрации ВСЕГДА показываем «письмо отправлено», независимо от того,
+      // требует ли проект подтверждения перед входом (isLoggedIn()) — партнёр должен
+      // увидеть это сообщение в любом случае, а не молча улететь на следующий экран
+      var esc = document.createElement('div');
+      esc.textContent = email;
+      var safeEmail = esc.innerHTML;
       if (!window.UdsAuth.isLoggedIn()) {
-        // регистрация прошла, но проект требует подтверждение по почте
-        show('info', 'Аккаунт создан. Проверь почту и подтверди email, потом зайди через «Войти».');
+        show('info', '📩 Мы отправили письмо с подтверждением на <b>' + safeEmail + '</b>.<br>Открой его, подтверди адрес, потом вернись сюда и войди.');
         setMode('in');
         btn.disabled = false;
         return;
       }
-      afterLogin();
+      show('info', '📩 Мы отправили письмо с подтверждением на <b>' + safeEmail + '</b> — можешь открыть его позже.<br>Аккаунт уже активен.<br><button type="button" id="continueAfterSignup" class="linklike" style="margin-top:8px">Продолжить →</button>');
+      document.getElementById('continueAfterSignup').onclick = function(){ clearMsg(); afterLogin(); };
+      btn.disabled = true;
+      btn.textContent = 'Готово';
     }).catch(function(err){
       var m = err.message || 'Что-то пошло не так';
       if (/already registered|already exists/i.test(m)) m = 'Такой email уже зарегистрирован — попробуй «Войти» или «Забыл пароль?».';
