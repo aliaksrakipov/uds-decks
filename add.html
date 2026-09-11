@@ -23,7 +23,15 @@ body{
 .logo span{color:var(--mut2);font-weight:400;font-family:"Inter",sans-serif;margin-left:10px;font-size:17px}
 h1{font-family:"Unbounded",sans-serif;font-weight:800;font-size:clamp(24px,4vw,34px);line-height:1.2;margin-top:36px}
 .sub{color:var(--mut);font-size:15.5px;margin-top:12px;line-height:1.5}
-form{margin-top:32px;display:flex;flex-direction:column;gap:18px}
+.tabs{display:flex;gap:8px;margin-top:26px}
+.tab{padding:10px 18px;border-radius:99px;border:1px solid var(--line);background:transparent;color:var(--mut);
+  font:600 14px/1 "Inter",sans-serif;cursor:pointer}
+.tab.active{background:var(--acc-dim);border-color:rgba(167,139,250,.5);color:var(--ink)}
+select{
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--ink);
+  font:400 15px/1.45 "Inter",sans-serif;padding:12px 14px;outline:none;appearance:none}
+select:focus{border-color:rgba(167,139,250,.55)}
+form{margin-top:24px;display:flex;flex-direction:column;gap:18px}
 label{display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--mut);font-weight:600}
 label b{color:var(--ink)}
 label small{font-weight:400;color:var(--mut2)}
@@ -31,6 +39,11 @@ input[type=text],textarea{
   background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--ink);
   font:400 15px/1.45 "Inter",sans-serif;padding:12px 14px;outline:none}
 input[type=text]:focus,textarea:focus{border-color:rgba(167,139,250,.55)}
+input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus{
+  -webkit-text-fill-color:var(--ink); caret-color:var(--ink);
+  -webkit-box-shadow:0 0 0 1000px var(--panel) inset; box-shadow:0 0 0 1000px var(--panel) inset;
+  transition:background-color 9999s ease-in-out 0s;
+}
 textarea{min-height:110px;resize:vertical}
 .photo-row{display:flex;align-items:center;gap:16px}
 .photo-prev{width:84px;height:84px;border-radius:16px;background:var(--acc-dim);border:1px solid var(--line);
@@ -49,14 +62,23 @@ button.send:disabled{opacity:.5;cursor:default;filter:none}
 .msg a{color:var(--acc)}
 .back{display:inline-block;margin-top:28px;color:var(--mut2);font-size:14px;text-decoration:none}
 .back:hover{color:var(--ink)}
+[hidden]{display:none!important}
 </style>
 </head><body>
 <div class="wrap">
-  <div class="logo">uds<span>Partner · новый спикер</span></div>
-  <h1>Добавить себя в каталог</h1>
-  <p class="sub">Заполни анкету — и презентации будут открываться с твоей визиткой. Кодовое слово спроси у Александра Ракипова (<a href="https://t.me/aliaksrakipov" style="color:var(--acc)">@aliaksrakipov</a>).</p>
+  <div class="logo">uds<span>Partner · анкета</span></div>
+  <h1 id="h1">Добавить себя в каталог</h1>
+  <p class="sub" id="sub">Заполни анкету — и презентации будут открываться с твоей визиткой. Кодовое слово спроси у Александра Ракипова (<a href="https://t.me/aliaksrakipov" style="color:var(--acc)">@aliaksrakipov</a>).</p>
+
+  <div class="tabs">
+    <button type="button" class="tab active" id="tabAdd">Новый спикер</button>
+    <button type="button" class="tab" id="tabEdit">Исправить анкету</button>
+  </div>
 
   <form id="f">
+    <label id="pickBlock" hidden><b>Кого редактируем</b>
+      <select id="pickSelect"><option value="">Выбери из списка…</option></select>
+    </label>
     <label><b>Кодовое слово</b>
       <input type="text" id="secret" autocomplete="off" required>
     </label>
@@ -72,7 +94,7 @@ button.send:disabled{opacity:.5;cursor:default;filter:none}
     <label><b>Telegram</b><small>Без @, необязательно — покажется на слайде контактов</small>
       <input type="text" id="tg" placeholder="username">
     </label>
-    <label><b>Фото</b><small>Вертикальное или квадратное, лицо ближе к верху кадра</small>
+    <label><b>Фото</b><small id="photoHint">Вертикальное или квадратное, лицо ближе к верху кадра</small>
       <div class="photo-row">
         <div class="photo-prev" id="prev">нет фото</div>
         <button type="button" class="file-btn" id="pick">Выбрать файл</button>
@@ -91,14 +113,95 @@ button.send:disabled{opacity:.5;cursor:default;filter:none}
 (function(){
   var cfg = window.SITE_CONFIG || {};
   var msg = document.getElementById('msg');
-  var photoData = null; // data:image/jpeg;base64,...
+  var photoData = null;       // data:image/jpeg;base64,... — новое фото, если выбрали
+  var existingPhoto = null;   // фото уже сохранённого спикера, если не меняли
+  var mode = 'add';           // 'add' | 'edit'
+  var editId = null;          // настоящий id редактируемого спикера — не пересобираем из имени
+  var partnersCache = null;
+
+  var h1 = document.getElementById('h1');
+  var sub = document.getElementById('sub');
+  var pickBlock = document.getElementById('pickBlock');
+  var pickSelect = document.getElementById('pickSelect');
+  var btn = document.getElementById('send');
+  var nameI = document.getElementById('name');
+  var roleI = document.getElementById('role');
+  var factsI = document.getElementById('facts');
+  var tgI = document.getElementById('tg');
+  var prev = document.getElementById('prev');
 
   function show(kind, html){ msg.className = 'msg ' + kind; msg.innerHTML = html; }
+  function clearMsg(){ msg.className = 'msg'; msg.innerHTML = ''; }
 
   if (!cfg.supabaseUrl || !cfg.supabaseAnonKey) {
     show('err', 'Форма ещё не подключена к базе — добавление пока через Александра.');
-    document.getElementById('send').disabled = true;
+    btn.disabled = true;
   }
+
+  function resetFields(){
+    nameI.value = ''; roleI.value = ''; factsI.value = ''; tgI.value = '';
+    photoData = null; existingPhoto = null;
+    prev.innerHTML = 'нет фото';
+    editId = null;
+  }
+
+  function setMode(m){
+    mode = m; clearMsg(); resetFields();
+    document.getElementById('tabAdd').className = 'tab' + (m === 'add' ? ' active' : '');
+    document.getElementById('tabEdit').className = 'tab' + (m === 'edit' ? ' active' : '');
+    pickBlock.hidden = (m === 'add');
+    if (m === 'add') {
+      h1.textContent = 'Добавить себя в каталог';
+      sub.innerHTML = 'Заполни анкету — и презентации будут открываться с твоей визиткой. Кодовое слово спроси у Александра Ракипова (<a href="https://t.me/aliaksrakipov" style="color:var(--acc)">@aliaksrakipov</a>).';
+      btn.textContent = 'Добавить в каталог';
+      document.getElementById('photoHint').textContent = 'Вертикальное или квадратное, лицо ближе к верху кадра';
+    } else {
+      h1.textContent = 'Исправить анкету';
+      sub.textContent = 'Выбери себя из списка — подтянем текущие данные, поправь что нужно и сохрани. Кодовое слово то же, что и при добавлении.';
+      btn.textContent = 'Сохранить изменения';
+      document.getElementById('photoHint').textContent = 'Если не трогать — останется прежнее фото';
+      loadPartnersList();
+    }
+  }
+  document.getElementById('tabAdd').onclick = function(){ setMode('add'); };
+  document.getElementById('tabEdit').onclick = function(){ setMode('edit'); };
+
+  function loadPartnersList(){
+    if (partnersCache) { fillSelect(partnersCache); return; }
+    pickSelect.innerHTML = '<option value="">Загружаю…</option>';
+    fetch(cfg.supabaseUrl + '/rest/v1/partners_ext?select=id,name&order=name.asc', {
+      headers: { apikey: cfg.supabaseAnonKey, Authorization: 'Bearer ' + cfg.supabaseAnonKey }
+    }).then(function(r){ return r.json(); })
+      .then(function(rows){ partnersCache = rows || []; fillSelect(partnersCache); })
+      .catch(function(){ pickSelect.innerHTML = '<option value="">Не получилось загрузить список</option>'; });
+  }
+  function fillSelect(rows){
+    pickSelect.innerHTML = '<option value="">Выбери из списка…</option>' +
+      rows.map(function(p){ return '<option value="' + p.id + '">' + p.name + '</option>'; }).join('');
+  }
+  pickSelect.onchange = function(){
+    var id = pickSelect.value;
+    clearMsg();
+    if (!id) { resetFields(); pickSelect.value = ''; return; }
+    editId = id;
+    btn.disabled = true;
+    fetch(cfg.supabaseUrl + '/rest/v1/partners_ext?select=name,role,facts,tg,photo_b64&id=eq.' + encodeURIComponent(id), {
+      headers: { apikey: cfg.supabaseAnonKey, Authorization: 'Bearer ' + cfg.supabaseAnonKey }
+    }).then(function(r){ return r.json(); })
+      .then(function(rows){
+        var p = rows && rows[0];
+        btn.disabled = false;
+        if (!p) { show('err', 'Не нашёл эту анкету — обнови страницу.'); return; }
+        nameI.value = p.name || '';
+        roleI.value = p.role || '';
+        factsI.value = (p.facts || []).join('\n');
+        tgI.value = p.tg || '';
+        photoData = null;
+        existingPhoto = p.photo_b64 || null;
+        prev.innerHTML = existingPhoto ? '<img src="' + existingPhoto + '">' : 'нет фото';
+      })
+      .catch(function(){ btn.disabled = false; show('err', 'Сеть недоступна — попробуй ещё раз.'); });
+  };
 
   // фото: ресайз на клиенте до высоты 1000, JPEG
   document.getElementById('pick').onclick = function(){ document.getElementById('file').click(); };
@@ -117,13 +220,13 @@ button.send:disabled{opacity:.5;cursor:default;filter:none}
         q -= 0.12;
         photoData = cv.toDataURL('image/jpeg', q);
       }
-      document.getElementById('prev').innerHTML = '<img src="' + photoData + '">';
+      prev.innerHTML = '<img src="' + photoData + '">';
       URL.revokeObjectURL(img.src);
     };
     img.src = URL.createObjectURL(f);
   };
 
-  // транслит имени в id-слаг
+  // транслит имени в id-слаг (только для режима «новый спикер»)
   var TR = {а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'e',ж:'zh',з:'z',и:'i',й:'i',к:'k',л:'l',м:'m',
     н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'h',ц:'c',ч:'ch',ш:'sh',щ:'sch',ъ:'',
     ы:'y',ь:'',э:'e',ю:'yu',я:'ya'};
@@ -137,22 +240,25 @@ button.send:disabled{opacity:.5;cursor:default;filter:none}
 
   document.getElementById('f').onsubmit = function(e){
     e.preventDefault();
-    var name = document.getElementById('name').value.trim();
-    var facts = document.getElementById('facts').value.split('\n')
+    if (mode === 'edit' && !editId) { show('err', 'Сначала выбери себя из списка.'); return; }
+    var name = nameI.value.trim();
+    var facts = factsI.value.split('\n')
       .map(function(s){ return s.trim().replace(/^[-•·]\s*/, ''); })
       .filter(Boolean).slice(0, 5);
+    var pId = mode === 'edit' ? editId : slug(name);
     var body = {
       secret: document.getElementById('secret').value.trim(),
-      p_id: slug(name),
+      p_id: pId,
       p_name: name,
-      p_role: document.getElementById('role').value.trim(),
+      p_role: roleI.value.trim(),
       p_facts: facts,
-      p_tg: document.getElementById('tg').value.trim().replace(/^@/, ''),
-      p_photo: photoData
+      p_tg: tgI.value.trim().replace(/^@/, ''),
+      p_photo: photoData || null // null в режиме правки = сервер сохранит прежнее фото
     };
     if (!body.p_id) { show('err', 'Имя пустое или из него не собрался адрес.'); return; }
-    var btn = document.getElementById('send');
-    btn.disabled = true; btn.textContent = 'Отправляю…';
+    var sendingText = mode === 'edit' ? 'Сохраняю…' : 'Отправляю…';
+    var idleText = mode === 'edit' ? 'Сохранить изменения' : 'Добавить в каталог';
+    btn.disabled = true; btn.textContent = sendingText;
     fetch(cfg.supabaseUrl + '/rest/v1/rpc/add_partner', {
       method: 'POST',
       headers: {
@@ -164,19 +270,20 @@ button.send:disabled{opacity:.5;cursor:default;filter:none}
     }).then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
       .then(function(res){
         if (res.ok) {
-          show('ok', '✅ Готово! Ты в каталоге. <a href="index.html?p=' + body.p_id + '">Открыть каталог с твоей визиткой</a>');
-          btn.textContent = 'Добавлено';
+          var okText = mode === 'edit' ? '✅ Сохранено!' : '✅ Готово! Ты в каталоге.';
+          show('ok', okText + ' <a href="index.html?p=' + body.p_id + '">Открыть каталог с визиткой</a>');
+          btn.textContent = mode === 'edit' ? 'Сохранено' : 'Добавлено';
         } else {
           var m = (res.j && res.j.message) || 'что-то пошло не так';
           if (/wrong secret/.test(m)) m = 'Неверное кодовое слово.';
           if (/photo too big/.test(m)) m = 'Фото слишком тяжёлое — попробуй другое.';
           show('err', m);
-          btn.disabled = false; btn.textContent = 'Добавить в каталог';
+          btn.disabled = false; btn.textContent = idleText;
         }
       })
       .catch(function(){
         show('err', 'Сеть недоступна — попробуй ещё раз.');
-        btn.disabled = false; btn.textContent = 'Добавить в каталог';
+        btn.disabled = false; btn.textContent = idleText;
       });
   };
 })();
