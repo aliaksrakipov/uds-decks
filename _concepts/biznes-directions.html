@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Бизнес на продукте UDS — 4 направления пересборки</title>
+<style>
+@font-face{font-family:'Unbounded';font-weight:800;font-display:swap;src:url(../assets/fonts/unbounded-800.woff2) format('woff2');}
+@font-face{font-family:'Inter';font-weight:100 900;font-display:swap;src:url(../assets/fonts/inter-var.woff2) format('woff2');}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:#08090C;color:#EDEEF4;font-family:Inter,-apple-system,sans-serif}
+body{overflow:hidden}
+.top{position:fixed;left:0;right:0;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:16px 28px;font-size:13px;color:#8b90a5;background:linear-gradient(180deg,#08090C 60%,transparent)}
+.top b{color:#EDEEF4;font-weight:600}
+.dots{display:flex;gap:8px}
+.dots i{width:28px;height:4px;border-radius:2px;background:rgba(255,255,255,.14)}
+.dots i.on{background:#A78BFA}
+.track{height:100%;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none}
+.track::-webkit-scrollbar{display:none}
+.panel{flex:0 0 100vw;height:100%;scroll-snap-align:start;padding:72px 48px 28px;display:grid;grid-template-rows:auto 1fr auto;gap:18px;overflow:hidden}
+.ph{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+.ph .n{font-family:Unbounded;font-size:13px;color:#A78BFA;letter-spacing:.2em}
+.ph h1{font-family:Unbounded;font-weight:800;font-size:clamp(22px,2.6vw,34px);line-height:1.1}
+.ph p{flex-basis:100%;color:#a9aec2;font-size:15px;max-width:980px;line-height:1.5}
+.frames{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center;min-height:0}
+.frame{position:relative;aspect-ratio:16/9;width:100%;container-type:inline-size;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#0E0E15;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.cap{position:absolute;left:1.6cqw;bottom:1.4cqw;font-size:1.3cqw;color:rgba(255,255,255,.35);letter-spacing:.14em;text-transform:uppercase;z-index:9}
+.notes{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;font-size:13.5px;line-height:1.45}
+.notes div{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 14px}
+.notes b{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A78BFA;margin-bottom:6px}
+.notes ul{padding-left:16px;color:#c6cad9}
+.notes li{margin:3px 0}
+.nav{position:fixed;top:50%;transform:translateY(-50%);z-index:6;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(14,14,21,.8);color:#EDEEF4;font-size:20px;cursor:pointer;display:grid;place-items:center}
+.nav.l{left:10px}.nav.r{right:10px}
+.nav:hover{border-color:#A78BFA}
+.k{color:#9fe0bb}.x{color:#f0aab6}
+
+/* ===== общие для кадров ===== */
+.U{font-family:Unbounded,sans-serif;font-weight:800}
+.acc{color:#A78BFA}
+.chrome{background:linear-gradient(180deg,#fff 0%,#f4f6fc 55%,#d9deec 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ===== A · Прямой разговор ===== */
+.A{background:#0A0A0D;padding:9cqw 8cqw;display:flex;flex-direction:column;justify-content:center}
+.A .idx{font-size:1.2cqw;letter-spacing:.3em;color:#6b6f80;margin-bottom:3cqw}
+.A h2{font-weight:600;font-size:4.6cqw;line-height:1.14;letter-spacing:-.01em;max-width:80cqw}
+.A h2 em{font-style:normal;color:#A78BFA}
+.A .sub{margin-top:3cqw;font-size:1.9cqw;color:#8b90a5;max-width:60cqw;line-height:1.5}
+.A .rule{width:6cqw;height:2px;background:#A78BFA;margin:3cqw 0 0}
+.A .big{font-size:11cqw;line-height:1;letter-spacing:-.03em}
+.A .big small{font-size:2.4cqw;color:#8b90a5;font-family:Inter;font-weight:500;letter-spacing:0;margin-left:1.4cqw}
+
+/* ===== B · Доказательства ===== */
+.B{display:grid;grid-template-columns:1.15fr 1fr}
+.B .pic{position:relative;overflow:hidden}
+.B .pic img{width:100%;height:100%;object-fit:cover;filter:saturate(.85) contrast(1.05)}
+.B .pic:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 55%,#0E0E15 100%),linear-gradient(0deg,rgba(14,14,21,.6),transparent 40%)}
+.B .txt{padding:6cqw 5cqw 5cqw 3cqw;display:flex;flex-direction:column;justify-content:flex-end;gap:1.2cqw}
+.B .tag{font-size:1.15cqw;letter-spacing:.24em;text-transform:uppercase;color:#A78BFA}
+.B .num{font-size:6.2cqw;line-height:1;letter-spacing:-.02em}
+.B .num span{font-size:2.4cqw;color:#8b90a5;font-family:Inter;font-weight:500;letter-spacing:0}
+.B .who{font-size:1.9cqw;font-weight:600}
+.B .meta{font-size:1.35cqw;color:#8b90a5;line-height:1.5}
+.B .bars{display:flex;gap:1.2cqw;align-items:flex-end;height:14cqw;margin:1cqw 0}
+.B .bars div{flex:1;background:linear-gradient(180deg,#A78BFA,#7C3AED);border-radius:.5cqw .5cqw 0 0;position:relative}
+.B .bars div b{position:absolute;left:0;right:0;top:-2.4cqw;text-align:center;font-size:1.3cqw;font-weight:600;color:#EDEEF4}
+.B .bars div i{position:absolute;left:0;right:0;bottom:-2.2cqw;text-align:center;font-size:1.05cqw;color:#8b90a5;font-style:normal}
+
+/* ===== C · Симулятор ===== */
+.C{background:#0B0C12;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:4cqw 4cqw;padding:4.5cqw 5cqw}
+.C .hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2.6cqw}
+.C .hd h3{font-size:2.6cqw}
+.C .hd span{font-size:1.1cqw;color:#8b90a5;letter-spacing:.2em;text-transform:uppercase}
+.C .tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:1.2cqw}
+.C .tile{border:1px solid rgba(255,255,255,.1);border-radius:1.2cqw;padding:1.6cqw 1.4cqw;background:rgba(255,255,255,.03);display:flex;flex-direction:column;gap:.7cqw;min-height:22cqw}
+.C .tile.on{border-color:#A78BFA;background:rgba(124,58,237,.14);box-shadow:0 0 3cqw rgba(124,58,237,.35)}
+.C .tile .p{font-size:1.5cqw;color:#8b90a5;letter-spacing:.1em;text-transform:uppercase}
+.C .tile .c{font-size:2.3cqw}
+.C .tile .d{font-size:1.15cqw;color:#c6cad9;line-height:1.45;margin-top:auto}
+.C .tile .d b{color:#A78BFA;font-weight:600}
+.C .ok{color:#9fe0bb}.C .no{color:#f0aab6}
+.C .dash{display:grid;grid-template-columns:1.1fr 1fr;gap:1.6cqw;height:100%}
+.C .ctl{border:1px solid rgba(255,255,255,.1);border-radius:1.2cqw;padding:2cqw;background:rgba(255,255,255,.03);display:flex;flex-direction:column;justify-content:center;gap:1.6cqw}
+.C .row{font-size:1.35cqw;color:#c6cad9;display:grid;grid-template-columns:1fr auto;gap:.5cqw 1cqw}
+.C .row b{color:#A78BFA;font-variant-numeric:tabular-nums}
+.C .row s{grid-column:1/-1;height:.5cqw;border-radius:1cqw;background:rgba(255,255,255,.12);position:relative;text-decoration:none;display:block}
+.C .row s:after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--w);background:#A78BFA;border-radius:1cqw}
+.C .row s:before{content:"";position:absolute;left:calc(var(--w) - .9cqw);top:-.65cqw;width:1.8cqw;height:1.8cqw;border-radius:50%;background:#EDEEF4;box-shadow:0 0 0 .4cqw rgba(167,139,250,.35)}
+.C .kpi{display:grid;grid-template-rows:1fr 1.25fr 1fr;gap:1.2cqw}
+.C .kpi div{border:1px solid rgba(255,255,255,.1);border-radius:1.2cqw;padding:1.4cqw 1.8cqw;background:rgba(255,255,255,.03);display:flex;flex-direction:column;justify-content:center}
+.C .kpi div.hi{border-color:rgba(167,139,250,.5);background:rgba(124,58,237,.12)}
+.C .kpi small{font-size:1cqw;letter-spacing:.18em;text-transform:uppercase;color:#8b90a5}
+.C .kpi big{font-size:3cqw;line-height:1.15;font-variant-numeric:tabular-nums}
+.C .kpi .hi big{font-size:3.8cqw}
+.C .spark{display:flex;gap:.35cqw;align-items:flex-end;height:3cqw;margin-top:.6cqw}
+.C .spark i{flex:1;background:#A78BFA;opacity:.7;border-radius:.2cqw}
+
+/* ===== D · Экосистема ===== */
+.D{background:radial-gradient(70% 90% at 70% 40%,#241B45 0%,transparent 60%),#0A0A12;padding:7cqw 7cqw;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.D .city{position:absolute;right:-4cqw;top:-2cqw;width:62cqw;height:62cqw;opacity:.9}
+.D .city i{position:absolute;width:.7cqw;height:.7cqw;border-radius:50%;background:#C4B5FD;box-shadow:0 0 1cqw rgba(196,181,253,.9);animation:pulse 3s ease-in-out infinite}
+.D .city i.dim{background:rgba(196,181,253,.25);box-shadow:none;animation:none;width:.5cqw;height:.5cqw}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.6);opacity:.5}}
+.D .ey{font-size:1.2cqw;letter-spacing:.26em;text-transform:uppercase;color:#A78BFA;margin-bottom:2.4cqw}
+.D h2{font-size:5cqw;line-height:1.08;max-width:62cqw;position:relative}
+.D h2 em{font-style:normal}
+.D .sub{margin-top:2.6cqw;font-size:1.8cqw;color:#a9aec2;max-width:48cqw;line-height:1.5;position:relative}
+.D .roles{display:flex;gap:1.4cqw;margin-top:3.6cqw;position:relative}
+.D .roles span{padding:1.1cqw 2.2cqw;border-radius:99cqw;border:1px solid rgba(167,139,250,.4);font-size:1.5cqw;font-weight:600}
+.D .roles span.x{text-decoration:line-through;color:#6b6f80;border-color:rgba(255,255,255,.1)}
+</style>
+</head><body>
+
+<div class="top"><div><b>Бизнес на продукте UDS</b> · 4 направления пересборки · листай → ← или стрелками</div><div class="dots" id="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div></div>
+<button class="nav l" id="prev">←</button><button class="nav r" id="next">→</button>
+
+<div class="track" id="track">
+
+<!-- ===== 0 · Диагноз ===== -->
+<section class="panel">
+  <div class="ph"><span class="n">00</span><h1>Что оставить, что убрать — независимо от стиля</h1>
+    <p>Главная проблема текущей деки не в цвете. Она написана голосом сетевой компании («неограниченный потолок», «рынок — весь мир», «20 → 400 → 5 000»), а слушатель в Беларуси этот голос узнаёт за 10 секунд. Дальше — четыре способа говорить иначе. Факты из переписки с ментором учтены: на Start (850 $) лицензии не продаются, только аренда из корзины компании.</p></div>
+  <div class="frames" style="grid-template-columns:1fr 1fr 1fr;align-items:start">
+    <div class="notes" style="grid-template-columns:1fr;grid-column:1/-1">
+      <div><b class="x">Убрать точно</b><ul>
+        <li>Слайд «Команда 20 → 400 → 5 000» — это нарисованная пирамида. Самый вредный слайд деки.</li>
+        <li>«Неограниченный потолок», «рынок — весь мир / 29 языков», «пассивный доход структуры 7 510 $» — обещания, которые нельзя проверить.</li>
+        <li>Лозунги без содержания: «Миссия», «Бизнес — инструмент достижения целей», «Желаемый образ жизни».</li>
+        <li>Расчёт «4 100 $/мес с первого месяца» и моё «порог входа — одна продажа» (на 850 $ продавать нельзя — только аренда).</li>
+        <li>«Со мной собираем список 20 бизнесов» — у человека может не быть ни одного. Нужен сценарий старта с нулевым окружением.</li>
+      </ul></div>
+      <div><b class="k">Оставить (работает в любом стиле)</b><ul>
+        <li>МСП Беларуси в цифрах (Белстат) — единственный слайд с источником, звучит взросло.</li>
+        <li>«IT-сервисы пришли из России — uds следующий» — честный аргумент тайминга.</li>
+        <li>Кейсы с цифрами: Nicecar 216 → 825, SAVVALI +20 %, Хвисевич 236 → 3 621 $ за 4 месяца.</li>
+        <li>Таблица аренда/выкуп и пакеты — это факты, их не надо украшать.</li>
+        <li>Калькулятор — но с исправленной моделью: выбор пакета → что разрешено (Start: только аренда из корзины).</li>
+        <li>Контакты с QR.</li>
+      </ul></div>
+      <div><b>Старт без окружения — как честно</b><ul>
+        <li>«Твой список может быть пустым — это нормально». Первые клиенты: заведения рядом (демо приложения на телефоне за 5 минут), каталог UDS (бизнесы, которые уже ищут), 2–3 первые встречи — вместе с куратором.</li>
+        <li>На Start лицензии не покупаешь — берёшь из корзины компании и сдаёшь в аренду: 85 $/мес с каждой. 850 $ возвращаются за 10 «лицензие-месяцев»: например, 2 клиента × 5 месяцев.</li>
+      </ul></div>
+    </div>
+  </div>
+  <div></div>
+</section>
+
+<!-- ===== A ===== -->
+<section class="panel">
+  <div class="ph"><span class="n">A</span><h1>Прямой разговор</h1>
+    <p>12–14 слайдов, одна мысль на экран, почти без карточек. Типографика вместо дизайна. Тон — человек, который сам всё проверил и не уговаривает. Самый дешёвый в производстве и самый далёкий от «сетевой» эстетики.</p></div>
+  <div class="frames">
+    <div class="frame A">
+      <div class="idx">03 / 14</div>
+      <h2 class="U" style="max-width:none">В девяти из десяти кафе, салонов и магазинов рядом с вами <em>нет системы</em> возврата клиентов.</h2>
+      <div class="rule"></div>
+      <div class="sub">Проверьте сами: зайдите в любое заведение на своей улице и спросите, сколько гостей вернулось в этом месяце. Ответа не будет.</div>
+      <div class="cap">A · слайд-мысль</div>
+    </div>
+    <div class="frame A">
+      <div class="idx">09 / 14</div>
+      <div class="big U chrome">85 $<small>в месяц с каждой лицензии в аренде</small></div>
+      <div class="rule"></div>
+      <h2 class="U" style="font-size:3cqw;margin-top:2.6cqw">Вход — 850 $. Лицензии не покупаешь:<br>берёшь из корзины компании и сдаёшь в аренду.<br><em>Два клиента на пять месяцев</em> — и вход окупился.</h2>
+      <div class="cap">A · слайд-цифра</div>
+    </div>
+  </div>
+  <div class="notes">
+    <div><b>Темп и длина</b>12–14 слайдов, 15 минут. Без фрагментов-кликов, кроме цифр-счётчиков.</div>
+    <div><b>Что берём из текущей</b>Белстат, «IT из России», аренда/выкуп, 2 кейса, контакты. Остальное переписывается в одну фразу на слайд.</div>
+    <div><b>Риск</b>Может показаться «бедной» рядом с деками других партнёров. Это осознанный выбор: контраст — и есть приём.</div>
+    <div><b>Производство</b>День. Никаких генераций и фото.</div>
+  </div>
+</section>
+
+<!-- ===== B ===== -->
+<section class="panel">
+  <div class="ph"><span class="n">B</span><h1>Доказательства</h1>
+    <p>Дека начинается не с «что такое UDS», а с результата: заведение в 15 минутах от зала и его цифры. Журнальная вёрстка — большое фото, большая цифра, короткая подпись. Про программу и вход — только после того, как зритель поверил, что продукт работает.</p></div>
+  <div class="frames">
+    <div class="frame B">
+      <div class="pic"><img src="../assets/img/produkt/nicecar-phone.jpg" alt=""></div>
+      <div class="txt">
+        <div class="tag">Кейс · Минск</div>
+        <div class="num U chrome">216 → 825<span> клиентов</span></div>
+        <div class="who">Nicecar Center, детейлинг</div>
+        <div class="meta">Шесть месяцев на UDS. Средний чек +17 %, 111 человек купили больше двух раз, 800+ сертификатов. Не слайд из Москвы — заведение, куда вы можете заехать завтра.</div>
+      </div>
+      <div class="cap" style="left:auto;right:1.6cqw">B · кейс-обложка</div>
+    </div>
+    <div class="frame B">
+      <div class="pic"><img src="../assets/partners/hvisevich.jpg" alt="" style="object-position:50% 15%"></div>
+      <div class="txt">
+        <div class="tag">Партнёр · Беларусь</div>
+        <div class="who" style="font-size:2.2cqw">Андрей Хвисевич</div>
+        <div class="meta">Кадровый военный, 1–2 часа в день параллельно со службой. Доход по месяцам, $:</div>
+        <div class="bars"><div style="height:7%"><b>236</b><i>1-й</i></div><div style="height:44%"><b>1 591</b><i>2-й</i></div><div style="height:46%"><b>1 667</b><i>3-й</i></div><div style="height:100%"><b>3 621</b><i>4-й</i></div></div>
+        <div class="meta" style="margin-top:1.6cqw">К четвёртому месяцу окупил VIP-пакет. 17 партнёров — пока служил.</div>
+      </div>
+      <div class="cap" style="left:auto;right:1.6cqw">B · партнёр в цифрах</div>
+    </div>
+  </div>
+  <div class="notes">
+    <div><b>Темп и длина</b>18–20 слайдов. Структура: 3 кейса → как устроено → что это стоит → как начать.</div>
+    <div><b>Что берём</b>Все три кейса (нужны живые фото заведений — не скрин телефона), таблицы, Белстат как фон.</div>
+    <div><b>Риск</b>Требует настоящих фотографий: Nicecar, SAVVALI, Хвисевич на встрече. Без них превращается в вариант A с картинками.</div>
+    <div><b>Производство</b>2 дня + фотосессия/сбор фото с партнёров. Генерации не нужны — наоборот, вредны.</div>
+  </div>
+</section>
+
+<!-- ===== C ===== -->
+<section class="panel">
+  <div class="ph"><span class="n">C</span><h1>Симулятор</h1>
+    <p>Зритель не слушает про доход — он его собирает сам. Сначала выбирает вход (и видит, что на каждом уровне разрешено), потом крутит ползунки и смотрит на 12 месяцев вперёд. Честность встроена в интерфейс: Start не даёт продавать, калькулятор это показывает, а не прячет.</p></div>
+  <div class="frames">
+    <div class="frame C">
+      <div class="hd"><h3 class="U">Выбери вход</h3><span>что разрешено на каждом уровне</span></div>
+      <div class="tiles">
+        <div class="tile on"><div class="p">Start</div><div class="c U">850 $</div><div class="d">0 своих лицензий<br><span class="ok">✓</span> аренда из корзины компании<br><span class="no">✕</span> продажа лицензий</div></div>
+        <div class="tile"><div class="p">Business</div><div class="c U">1 900 $</div><div class="d">2 лицензии<br><span class="ok">✓</span> аренда<br><span class="ok">✓</span> выкуп 1 500 $</div></div>
+        <div class="tile"><div class="p">Premium</div><div class="c U">3 950 $</div><div class="d">6 лицензий<br><span class="ok">✓</span> аренда<br><span class="ok">✓</span> выкуп</div></div>
+        <div class="tile"><div class="p">VIP</div><div class="c U">6 350 $</div><div class="d">12 лицензий<br><span class="ok">✓</span> аренда · выкуп<br><b>бонус 1 000 $</b> за партнёра</div></div>
+        <div class="tile"><div class="p">3 VIP</div><div class="c U">16 450 $</div><div class="d">36 лицензий<br><span class="ok">✓</span> всё<br><b>команд. бонус 3 600 $</b></div></div>
+      </div>
+      <div class="cap">C · шаг 1 — пакет</div>
+    </div>
+    <div class="frame C">
+      <div class="dash">
+        <div class="ctl">
+          <div class="row"><span>Пакет</span><b>Start · 850 $</b></div>
+          <div class="row"><span>Лицензий в аренду, в месяц</span><b>2</b><s style="--w:33%"></s></div>
+          <div class="row"><span>Партнёров приглашаешь, в месяц</span><b>0</b><s style="--w:0%"></s></div>
+          <div class="row"><span>Горизонт</span><b>12 мес</b><s style="--w:50%"></s></div>
+          <div class="row" style="font-size:1.05cqw;color:#8b90a5">Выкуп недоступен на Start — ползунок скрыт, не обнулён</div>
+        </div>
+        <div class="kpi">
+          <div><small>Месяц 1</small><big class="U chrome">170 $</big></div>
+          <div class="hi"><small>Месяц 12 · 24 лицензии в аренде</small><big class="U acc">2 040 $</big><div class="spark"><i style="height:8%"></i><i style="height:16%"></i><i style="height:25%"></i><i style="height:33%"></i><i style="height:41%"></i><i style="height:50%"></i><i style="height:58%"></i><i style="height:66%"></i><i style="height:75%"></i><i style="height:83%"></i><i style="height:91%"></i><i style="height:100%"></i></div></div>
+          <div><small>Вход окупается</small><big class="U chrome">на 4-й месяц</big></div>
+        </div>
+      </div>
+      <div class="cap">C · шаг 2 — твои 12 месяцев</div>
+    </div>
+  </div>
+  <div class="notes">
+    <div><b>Темп и длина</b>16–18 слайдов, из них 3 интерактивных. Можно отдать ссылку после встречи — человек досчитает дома.</div>
+    <div><b>Что берём</b>Пакеты и ставки как данные, кейсы как «проверка»: ползунки Хвисевича показывают его реальную траекторию.</div>
+    <div><b>Риск</b>На проекторе без мыши интерактив мёртв — нужен сценарий «презентор крутит, зал смотрит» и PDF-версия со статичными сценариями.</div>
+    <div><b>Производство</b>2–3 дня: честная модель калькулятора (пакет → права → ставки) + UI.</div>
+  </div>
+</section>
+
+<!-- ===== D ===== -->
+<section class="panel">
+  <div class="ph"><span class="n">D</span><h1>Экосистема</h1>
+    <p>Самый амбициозный тон: не «заработай на продукте», а «карта лояльности Беларуси пока пустая — мы её заполняем первыми». Партнёр — не продавец, а тот, кто подключает свой район. Кинематографично: карта с загорающимися точками, крупные манифесты, hero-визуалы. Ближе всего к текущему стилю, но с идеей вместо лозунгов.</p></div>
+  <div class="frames">
+    <div class="frame D">
+      <div class="city" id="city"></div>
+      <div class="ey">Беларусь · 2026</div>
+      <h2 class="U">Карта лояльности страны<br><em class="chrome">пока пустая.</em></h2>
+      <div class="sub">7 000+ бизнесов в России уже на UDS. В Беларуси — первые точки. Каждая новая — чей-то район, который подключил конкретный человек.</div>
+      <div class="cap">D · манифест с картой</div>
+    </div>
+    <div class="frame D">
+      <div class="ey">Роль</div>
+      <h2 class="U">Ты не продаёшь лицензии.<br>Ты <em class="acc">подключаешь свой район.</em></h2>
+      <div class="sub">Кафе, где завтракаешь. Барбершоп, куда ходишь. Автосервис друга. Десять точек вокруг дома — это уже бизнес с абонентской платой.</div>
+      <div class="roles"><span class="x">продавец</span><span class="x">сетевик</span><span>оператор района</span></div>
+      <div class="cap">D · роль партнёра</div>
+    </div>
+  </div>
+  <div class="notes">
+    <div><b>Темп и длина</b>16 слайдов, 3 манифеста, карта как сквозной мотив (точки добавляются по ходу).</div>
+    <div><b>Что берём</b>Белстат и карту областей (есть), «IT из России», кейсы как «первые точки на карте».</div>
+    <div><b>Риск</b>Пафос. Если визуал не дотянет — выглядит как реклама застройщика. Нужны 3–4 сильных hero-кадра (Higgsfield/OpenRouter) и реальная карта точек UDS в Минске.</div>
+    <div><b>Производство</b>3–4 дня + кредиты на генерации. Самый дорогой и самый «крышесносный», если сделать.</div>
+  </div>
+</section>
+
+</div>
+
+<script>
+(function(){
+  var track = document.getElementById('track'), dots = document.getElementById('dots').children, n = 5;
+  function idx(){ return Math.round(track.scrollLeft / track.clientWidth); }
+  function go(i){ i = Math.max(0, Math.min(n-1, i)); track.scrollTo({left: i*track.clientWidth, behavior:'smooth'}); }
+  track.addEventListener('scroll', function(){ var i = idx(); for(var k=0;k<n;k++) dots[k].classList.toggle('on', k===i); });
+  document.getElementById('prev').onclick = function(){ go(idx()-1); };
+  document.getElementById('next').onclick = function(){ go(idx()+1); };
+  document.addEventListener('keydown', function(e){ if(e.key==='ArrowRight') go(idx()+1); if(e.key==='ArrowLeft') go(idx()-1); });
+  var start = +(new URLSearchParams(location.search).get('p') || 0);
+  if(start){ track.style.scrollBehavior = 'auto'; track.scrollLeft = start * track.clientWidth; track.style.scrollBehavior = ''; }
+  // точки «города» для направления D
+  var c = document.getElementById('city');
+  if(c){ var s = 7; for(var k=0;k<140;k++){ var i = document.createElement('i');
+    var r = Math.pow(Math.random(), .6) * 46, a = Math.random()*6.283;
+    i.style.left = (50 + Math.cos(a)*r) + '%'; i.style.top = (50 + Math.sin(a)*r*.8) + '%';
+    if(k % 9) i.className = 'dim'; else i.style.animationDelay = (Math.random()*3) + 's';
+    c.appendChild(i); } }
+})();
+</script>
+</body></html>
