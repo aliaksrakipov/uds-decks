@@ -321,7 +321,6 @@ slides = [
         ('Продают лицензии<br>и строят сети', 'Подключают бизнесы<br>и строят команды'),
     ]),
     S_TWO_CIRCUITS,
-    S_PYRAMID,
     S_TILES,
     S_RATES,
     S_CALC,
