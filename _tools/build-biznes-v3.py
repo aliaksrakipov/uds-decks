@@ -104,13 +104,14 @@ def case_cover(tag, num, num_unit, who, meta, img, img_pos='50% 50%', extra=''):
 </section>
 ''' % (who, LOGO, img, who, img_pos, tag, num, num_unit, who, meta, extra)
 
-S_CASE_NICECAR = case_cover('Кейс · Минск', '216 → 825', ' клиентов', 'Nicecar Center, детейлинг',
-    'Шесть месяцев на UDS: средний чек ≈ 370 → ≈ 430 у.е. (+17 %), 111 человек купили больше двух раз, 800+ сертификатов на ≈ 22 700 у.е. Не слайд из Москвы — заведение, куда можно заехать завтра.',
-    '../assets/img/produkt/nicecar-phone.jpg')
-
-S_CASE_SAVVALI = case_cover('Кейс · Минск', '+20 %', 'к валовой выручке за 9 месяцев', 'SAVVALI, клуб красоты',
-    'Девять месяцев на UDS: 1 900 контактов в CRM, фактическая скидка 7,8 % вместо прямых 10 %, 131 новый клиент пришёл по рекомендации. До этого программы лояльности не было вообще.',
-    '../assets/img/produkt/savvali-banner.jpg')
+# Кейсы клиентов (Nicecar, SAVVALI) в этой деке не нужны — их рассказывают до Alex в продуктовой
+# части. Остаются только партнёрские кейсы из оригинальной деки. Фото Шестаковой — base64 из оригинала.
+_m = re.search(r'<img src="(data:image/[a-z]+;base64,[A-Za-z0-9+/=]+)" alt="Екатерина Шестакова"', orig('38 ·'))
+if not _m:
+    raise SystemExit('не нашёл фото Шестаковой в оригинале')
+S_CASE_SHESTAKOVA = case_cover('Партнёр · Россия', '≈ 16 000 $', 'за первый год (1,3 млн ₽)', 'Екатерина Шестакова',
+    'Учитель музыки в детском саду, Екатеринбург. До UDS — 35–40 тыс ₽ в месяц, вокруг только учителя и воспитатели, без опыта в бизнесе. Через год — клиенты и партнёры в 20+ регионах России и 7 странах.',
+    _m.group(1), '50% 15%')
 
 HV_BARS = '''<div class="bc-bars frag" data-step="1">
         <div style="height:7%"><b>236</b><i>1-й мес</i></div><div style="height:44%"><b>1 591</b><i>2-й</i></div><div style="height:46%"><b>1 667</b><i>3-й</i></div><div style="height:100%"><b>3 621</b><i>4-й</i></div>
@@ -309,10 +310,9 @@ slides = [
     S_PAIN,
     orig('4 ·'),
     S_PRODUCT_LIVE,
-    S_CASE_NICECAR,
-    S_CASE_SAVVALI,
     S_CASE_HVISEVICH,
     S_CASE_PARFENOV,
+    S_CASE_SHESTAKOVA,
     orig('8 ·'),
     orig('10 ·'),
     orig('20 ·', [
