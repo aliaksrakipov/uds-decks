@@ -28,6 +28,9 @@ h1 u{text-decoration:none;background:linear-gradient(transparent 78%,var(--viole
 .f label{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:700;font-size:15px}
 .f output{font-weight:900;font-size:22px;white-space:nowrap}
 .f .hint{font-size:12.5px;color:var(--muted);margin-top:2px}
+.f input[type=text]{width:100%;margin-top:8px;padding:10px 12px;border:1.5px solid var(--ink);border-radius:4px;font:600 16px "Inter Tight",sans-serif;background:#fff}
+.mgr{display:none;background:var(--violet-soft);margin:-6px -6px 18px;padding:10px 6px 4px;border-radius:3px}
+.mgr.on{display:block}
 input[type=range]{width:100%;margin:10px 0 0;accent-color:var(--violet);height:28px}
 .res{background:var(--ink);color:#fff;border-radius:4px;padding:22px 18px 18px;margin:0 4px 18px;transform:rotate(-.6deg)}
 .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 0;border-bottom:1px dashed #4a4640}
@@ -59,6 +62,10 @@ input[type=range]{width:100%;margin:10px 0 0;accent-color:var(--violet);height:2
   <div class="hand">посчитаем на салфетке ↓</div>
 
   <section class="card" aria-label="Ваши цифры">
+    <div class="f mgr" id="mgr">
+      <label for="n">Название бизнеса <span class="hint">режим менеджера</span></label>
+      <input type="text" id="n" maxlength="40" placeholder="Например: Кофейня Зерно" autocomplete="off">
+    </div>
     <div class="f">
       <label for="g">Новых гостей в месяц <output id="og"></output></label>
       <input type="range" id="g" min="20" max="3000" step="10">
@@ -116,14 +123,20 @@ input[type=range]{width:100%;margin:10px 0 0;accent-color:var(--violet);height:2
     inp.addEventListener("input", calc);
   });
 
-  if (name) {
+  function setTitle() {
     var t = el("title");
     t.textContent = "";
     t.append("Сколько гостей ");
     var u = document.createElement("u"); u.textContent = "уходит"; t.append(u);
-    t.append(" у «" + name + "»");
-    document.title = "Расчёт для «" + name + "» · UDS Беларусь";
+    t.append(name ? " у\u00A0«" + name + "»" : " у\u00A0вас");
+    document.title = name ? "Расчёт для «" + name + "» · UDS Беларусь" : "Сколько гостей уходит — расчёт · UDS Беларусь";
   }
+  if (q.get("m") === "1") {
+    el("mgr").classList.add("on");
+    el("n").value = name;
+    el("n").addEventListener("input", function () { name = el("n").value.trim().slice(0, 40); setTitle(); });
+  }
+  setTitle();
 
   function fmt(n) { return Math.round(n).toLocaleString("ru-RU").replace(/ /g, " "); }
   function ue(n) { return fmt(n) + " у.е."; }
