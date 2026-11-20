@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сколько гостей уходит — расчёт · UDS Беларусь</title>
+<meta name="description" content="Посчитаем на салфетке, сколько выручки уходит вместе с гостями, которые не вернулись после первого визита.">
+<meta property="og:title" content="Сколько гостей уходит — расчёт">
+<meta property="og:description" content="Посчитаем на салфетке, сколько выручки уходит вместе с гостями, которые не вернулись.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter+Tight:wght@500;600;700;800;900&display=swap">
+<style>
+:root{--paper:#F1ECE1;--grid:#E4DCCD;--ink:#171513;--muted:#6B655B;--violet:#6A4FC8;--violet-soft:#EFEAF9;--orange:#FF6A13;--card:#FCFAF5;--tape:#E7DBB6}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Inter Tight",system-ui,sans-serif;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:27px 27px}
+.wrap{max-width:560px;margin:0 auto;padding:22px 16px 48px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:900;font-size:19px;letter-spacing:-.03em}
+.logo small{font-weight:600;font-size:14px;letter-spacing:0}
+h1{font-weight:900;font-size:clamp(34px,9.5vw,48px);line-height:.98;letter-spacing:-.035em;margin:22px 0 6px;text-wrap:balance}
+h1 u{text-decoration:none;background:linear-gradient(transparent 78%,var(--violet) 78%,var(--violet) 92%,transparent 92%)}
+.hand{font-family:Caveat,cursive;font-weight:700;color:var(--violet);font-size:26px;line-height:1;transform:rotate(-1.5deg);display:inline-block;margin:4px 0 18px}
+.card{position:relative;background:var(--card);border-radius:4px;padding:20px 18px 8px;box-shadow:6px 6px 0 var(--violet);margin:0 4px 26px}
+.card:before{content:"";position:absolute;top:-11px;left:50%;width:92px;height:22px;margin-left:-46px;background:var(--tape);transform:rotate(-3deg);opacity:.95}
+.f{margin-bottom:18px}
+.f label{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:700;font-size:15px}
+.f output{font-weight:900;font-size:22px;white-space:nowrap}
+.f .hint{font-size:12.5px;color:var(--muted);margin-top:2px}
+input[type=range]{width:100%;margin:10px 0 0;accent-color:var(--violet);height:28px}
+.res{background:var(--ink);color:#fff;border-radius:4px;padding:22px 18px 18px;margin:0 4px 18px;transform:rotate(-.6deg)}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 0;border-bottom:1px dashed #4a4640}
+.row:last-of-type{border-bottom:0}
+.row span{font-size:14.5px;line-height:1.3;color:#d9d4cb}
+.row b{font-size:24px;font-weight:900;white-space:nowrap}
+.big{margin-top:14px;background:var(--violet);border-radius:3px;padding:14px 14px 12px;transform:rotate(1deg)}
+.big span{display:block;font-size:14.5px;color:#EFEAF9}
+.big b{display:block;font-size:clamp(34px,10vw,46px);font-weight:900;letter-spacing:-.02em;line-height:1.05;margin-top:2px}
+.big b i{font-style:normal;font-size:.5em;font-weight:800}
+.note{font-size:13px;color:var(--muted);line-height:1.4;margin:0 6px 22px}
+.why{font-family:Caveat,cursive;font-size:24px;line-height:1.1;margin:0 6px 22px}
+.why b{color:var(--violet)}
+.cta{display:block;text-align:center;text-decoration:none;background:var(--orange);color:var(--ink);font-weight:900;font-size:18px;padding:16px 14px;border-radius:4px;box-shadow:4px 4px 0 var(--ink);margin:0 6px 12px}
+.cta:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.copy{display:block;width:calc(100% - 12px);margin:0 6px;background:none;border:1.5px solid var(--ink);border-radius:4px;padding:12px;font:700 15px "Inter Tight",sans-serif;color:var(--ink);cursor:pointer}
+.foot{margin:28px 6px 0;font-size:12px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="logo">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5.6 A7.2 7.2 0 1 0 19.2 12.8 L19.2 10.2" stroke="#171513" stroke-width="4.2"/><circle cx="19.2" cy="4.6" r="2.7" fill="#FF6A13"/></svg>
+    uds <small>беларусь</small>
+  </div>
+
+  <h1 id="title">Сколько гостей <u>уходит</u> у&nbsp;вас</h1>
+  <div class="hand">посчитаем на салфетке ↓</div>
+
+  <section class="card" aria-label="Ваши цифры">
+    <div class="f">
+      <label for="g">Новых гостей в месяц <output id="og"></output></label>
+      <input type="range" id="g" min="20" max="3000" step="10">
+    </div>
+    <div class="f">
+      <label for="c">Средний чек <output id="oc"></output></label>
+      <input type="range" id="c" min="1" max="150" step="1">
+    </div>
+    <div class="f">
+      <label for="p">Не возвращаются после первого визита <output id="op"></output></label>
+      <div class="hint">Допущение: обычно это 60–80% новых гостей</div>
+      <input type="range" id="p" min="10" max="95" step="5">
+    </div>
+    <div class="f">
+      <label for="v">Визитов в месяц у постоянного гостя <output id="ov"></output></label>
+      <input type="range" id="v" min="1" max="8" step="1">
+    </div>
+    <div class="f">
+      <label for="r">Сколько ушедших реально вернуть <output id="or"></output></label>
+      <div class="hint">Осторожная оценка — каждого 10-го</div>
+      <input type="range" id="r" min="5" max="40" step="5">
+    </div>
+  </section>
+
+  <section class="res" aria-live="polite">
+    <div class="row"><span>Уходят после первого визита</span><b id="lost"></b></div>
+    <div class="row"><span>Один такой гость мог бы приносить в год</span><b id="per"></b></div>
+    <div class="row"><span>Выручка, которая уходит с гостями <em>одного</em> месяца, — за год</span><b id="pot"></b></div>
+    <div class="big"><span id="bigl">Если вернуть каждого 10-го — плюс за год</span><b id="win"></b></div>
+  </section>
+
+  <p class="note">Это оценка на допущениях, а не обещание. Точные цифры по вашему бизнесу посчитаем вместе — с учётом чека, сезона и того, что у вас уже работает.</p>
+
+  <p class="why">Баллы UDS тратятся только при <b>следующем визите</b> — поэтому гость возвращается именно к вам, а не к соседям.</p>
+
+  <a class="cta" id="cta" href="https://ig.me/m/uds_app_belarus" target="_blank" rel="noopener">Обсудить на встрече — 20 минут</a>
+  <button class="copy" id="copy" type="button">Скопировать ссылку с этим расчётом</button>
+
+  <p class="foot">UDS Беларусь · программа лояльности: приложение UDS или Telegram-мини-апп — на выбор гостя. Все суммы в у.е.</p>
+</main>
+
+<script>
+(function () {
+  var D = { g: 300, c: 8, p: 70, v: 2, r: 10 };
+  var q = new URLSearchParams(location.search);
+  var name = (q.get("n") || "").trim().slice(0, 40);
+  var el = function (id) { return document.getElementById(id); };
+  var keys = ["g", "c", "p", "v", "r"];
+
+  keys.forEach(function (k) {
+    var inp = el(k), v = parseFloat(q.get(k));
+    if (!isFinite(v)) v = D[k];
+    v = Math.min(+inp.max, Math.max(+inp.min, v));
+    inp.value = v;
+    inp.addEventListener("input", calc);
+  });
+
+  if (name) {
+    var t = el("title");
+    t.textContent = "";
+    t.append("Сколько гостей ");
+    var u = document.createElement("u"); u.textContent = "уходит"; t.append(u);
+    t.append(" у «" + name + "»");
+    document.title = "Расчёт для «" + name + "» · UDS Беларусь";
+  }
+
+  function fmt(n) { return Math.round(n).toLocaleString("ru-RU").replace(/ /g, " "); }
+  function ue(n) { return fmt(n) + " у.е."; }
+  function guests(n) {
+    var m10 = n % 10, m100 = n % 100;
+    var w = (m10 === 1 && m100 !== 11) ? "гость" : (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) ? "гостя" : "гостей";
+    return fmt(n) + " " + w;
+  }
+
+  function calc() {
+    var g = +el("g").value, c = +el("c").value, p = +el("p").value, v = +el("v").value, r = +el("r").value;
+    el("og").textContent = fmt(g);
+    el("oc").textContent = ue(c);
+    el("op").textContent = p + "%";
+    el("ov").textContent = v;
+    el("or").textContent = r + "%";
+    var lost = Math.round(g * p / 100);
+    var per = c * v * 12;
+    var pot = lost * per;
+    var win = pot * r / 100;
+    el("lost").textContent = guests(lost) + " / мес";
+    el("per").textContent = ue(per);
+    el("pot").textContent = ue(pot);
+    var every = Math.round(100 / r);
+    el("bigl").textContent = (100 % r === 0 ? "Если вернуть каждого " + every + "-го" : "Если вернуть " + r + "% ушедших") + " — плюс за год";
+    el("win").innerHTML = fmt(win) + " <i>у.е.</i>";
+  }
+
+  el("copy").addEventListener("click", function () {
+    var u = new URL(location.href.split("?")[0]);
+    if (name) u.searchParams.set("n", name);
+    keys.forEach(function (k) { u.searchParams.set(k, el(k).value); });
+    var s = u.toString(), b = el("copy");
+    var done = function () { b.textContent = "Ссылка скопирована ✓"; setTimeout(function () { b.textContent = "Скопировать ссылку с этим расчётом"; }, 2200); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(s).then(done, function () { prompt("Ссылка:", s); });
+    else prompt("Ссылка:", s);
+  });
+
+  calc();
+})();
+</script>
+</body>
+</html>
